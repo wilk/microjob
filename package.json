@@ -1,0 +1,20 @@
+{
+  "name": "task",
+  "version": "0.0.0",
+  "description": "My personal tryouts with Node.js threads. For now.",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wilk/task.git"
+  },
+  "author": "Vincenzo (Wilk)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wilk/task/issues"
+  },
+  "homepage": "https://github.com/wilk/task#readme",
+  "devDependencies": {}
+}
