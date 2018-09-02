@@ -4,7 +4,7 @@
   "description": "My personal tryouts with Node.js threads. For now.",
   "main": "index.js",
   "scripts": {
-    "build": "tsc"
+    "test": "node --experimental-worker node_modules/.bin/_mocha ./test"
   },
   "repository": {
     "type": "git",
@@ -16,5 +16,9 @@
     "url": "https://github.com/wilk/task/issues"
   },
   "homepage": "https://github.com/wilk/task#readme",
-  "devDependencies": {}
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0",
+    "sinon": "^6.1.5"
+  }
 }
