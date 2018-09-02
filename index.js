@@ -2,9 +2,10 @@ const {Worker, workerData} = require('worker_threads')
 const v8 = require('v8')
 const Task = require('./src/task')
 
-/*(async () => {
+(async () => {
   try {
-    console.log(await Task.factory(data => {
+    const config = {ctx: {a: 10}, data: {meh: 20}}
+    const res = await Task.factory(data => {
       console.log('lel from thread')
       return new Promise((resolve, reject) => {
         console.log('DATA FROM THREAD', data)
@@ -13,11 +14,12 @@ const Task = require('./src/task')
           else reject('NOPE')
         }, 2000)
       })
-    }, {ctx: {a: 10}, data: {meh: 20}}))
+    }, config)
+    console.log(res)
   } catch (err) {
     console.error(err)
   }
-})()*/
+})()
 const data = {b: 20}
 const ctx = {a: 10}
 Task.factory(data => console.log('ayo', data, a), {data, ctx})
