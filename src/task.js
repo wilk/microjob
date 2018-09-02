@@ -10,38 +10,43 @@ Try with:
 
 module.exports = class Task {
   static factory(handler, config = {ctx: {}, data: {}}) {
-    console.log('wat')
     return new Promise((resolve, reject) => {
-      if (typeof handler === 'undefined' || handler === null || typeof handler !== 'function') reject(new Error(MISSING_HANDLER_ERROR))
-    
-      let variables = ''
-      for (const key in config.ctx) {
-        variables += `let ${key} = ${config.ctx[key]}\n`
-      }
+      if (typeof handler === 'undefined' || handler === null) return reject(new Error(MISSING_HANDLER_ERROR))
 
-      const workerStr = `
-      (async function () {
-        const {parentPort, workerData} = require('worker_threads')
-        ${variables}
-        const response = {
-          err: null,
-          data: null
+      let worker
+      if (typeof handler === 'string') {
+        worker = new Worker(handler, {
+          workerData: config.data
+        })
+      } else if (typeof handler === 'function') {
+        let variables = ''
+        for (const key in config.ctx) {
+          variables += `let ${key} = ${config.ctx[key]}\n`
         }
-        
-        try {
-          response.data = await (${handler.toString()})(workerData)
-        } catch (err) {
-          response.error = err
-        }
-
-        parentPort.postMessage(response)
-      })()
-      `
-      console.log(workerStr)
-      const worker = new Worker(workerStr, {
-        eval: true,
-        workerData: config.data
-      })
+  
+        const workerStr = `
+        (async function () {
+          const {parentPort, workerData} = require('worker_threads')
+          ${variables}
+          const response = {
+            err: null,
+            data: null
+          }
+          
+          try {
+            response.data = await (${handler.toString()})(workerData)
+          } catch (err) {
+            response.error = err
+          }
+  
+          parentPort.postMessage(response)
+        })()
+        `
+        worker = new Worker(workerStr, {
+          eval: true,
+          workerData: config.data
+        })
+      } else return reject(new Error(MISSING_HANDLER_ERROR))
 
       worker.on('message', message => {
         if (message.error) reject(message.error)

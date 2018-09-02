@@ -2,7 +2,7 @@ const {Worker, workerData} = require('worker_threads')
 const v8 = require('v8')
 const Task = require('./src/task')
 
-(async () => {
+mmm = async () => {
   try {
     const config = {ctx: {a: 10}, data: {meh: 20}}
     const res = await Task.factory(data => {
@@ -19,10 +19,17 @@ const Task = require('./src/task')
   } catch (err) {
     console.error(err)
   }
-})()
+}
+mmm()
 const data = {b: 20}
 const ctx = {a: 10}
-Task.factory(data => console.log('ayo', data, a), {data, ctx})
+Task.factory(data => {
+  const fs = require('fs')
+
+  const file = fs.readFileSync('./package.json', 'utf-8')
+  console.log('file')
+  console.log(file)
+}, {data, ctx})
   .then(() => console.log('YEAH'), err => console.error(err))
 
 for (let i = 0; i < 3; i++) {
