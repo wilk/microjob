@@ -5,7 +5,8 @@
   "main": "src/thready.js",
   "scripts": {
     "test": "node --experimental-worker node_modules/.bin/_mocha ./test",
-    "doc": "node_modules/.bin/gitbook build"
+    "doc": "node_modules/.bin/gitbook build",
+    "lint": "node_modules/.bin/eslint src/thready.js"
   },
   "engines": {
     "node": ">=10.5.0",
@@ -27,6 +28,9 @@
   "homepage": "https://github.com/wilk/task#readme",
   "devDependencies": {
     "chai": "^4.1.2",
+    "eslint": "^5.5.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0",
     "gitbook-cli": "^2.3.2",
     "mocha": "^5.2.0",
     "sinon": "^6.1.5"

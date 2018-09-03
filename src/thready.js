@@ -1,4 +1,4 @@
-const {Worker, workerData} = require('worker_threads')
+const { Worker } = require('worker_threads')
 
 const MISSING_HANDLER_ERROR = `
 task needs a function or a string.
