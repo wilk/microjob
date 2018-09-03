@@ -21,9 +21,21 @@ module.exports = class Task {
       } else if (typeof handler === 'function') {
         let variables = ''
         for (const key in config.ctx) {
-          variables += `let ${key} = ${config.ctx[key]}\n`
+          let variable
+          switch (typeof config.ctx[key]) {
+            case 'string':
+              variable = `'${config.ctx[key]}'`
+              break
+            case 'object':
+              variable = JSON.stringify(config.ctx[key])
+              break
+            default:
+              variable = config.ctx[key]
+          }
+          variables += `let ${key} = ${variable}\n`
         }
   
+        // @todo: issue with functions and classes on postMessage (v8.serialize does not work)
         const workerStr = `
         (async function () {
           const {parentPort, workerData} = require('worker_threads')
