@@ -7,11 +7,19 @@
     "test": "node --experimental-worker node_modules/.bin/_mocha ./test",
     "doc": "node_modules/.bin/gitbook build"
   },
+  "engines": {
+    "node": ">=10.5.0",
+    "npm": ">= 6.0.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wilk/task.git"
   },
-  "author": "Vincenzo (Wilk) Ferrari",
+  "author": {
+    "email": "wilk3ert@gmail.com",
+    "name": "Vincenzo (Wilk) Ferrari",
+    "url": "https://github.com/wilk"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/wilk/task/issues"
