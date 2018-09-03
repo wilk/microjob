@@ -70,7 +70,7 @@ describe('Task testing', () => {
     }
     
     try {
-      res = await Task.factory(() => ({hello, numb, bool, obj, arr, myClass}), {ctx})
+      res = await Task.factory(() => ({hello, numb, bool, obj, arr}), {ctx})
     } catch (err) {
       error = err
     }
