@@ -1,4 +1,4 @@
-const Task = require('../src/task')
+const {task} = require('../src/thready')
 const assert = require('chai').assert
 
 describe('Task testing', () => {
@@ -6,7 +6,7 @@ describe('Task testing', () => {
     let error, res
     
     try {
-      res = await Task.factory(() => {
+      res = await task(() => {
         let i = 0
         for (i = 0; i < 1000000; i++) {}
   
@@ -23,7 +23,7 @@ describe('Task testing', () => {
   it('should execute a list of inline tasks', async () => {
     let error, results
 
-    let task = () => {
+    let job = () => {
       let i = 0
       for (i = 0; i < 1000000; i++) {}
 
@@ -31,7 +31,7 @@ describe('Task testing', () => {
     }
     
     try {
-      results = await Promise.all([Task.factory(task), Task.factory(task), Task.factory(task)])
+      results = await Promise.all([task(job), task(job), task(job)])
 
     } catch (err) {
       error = err
@@ -46,7 +46,7 @@ describe('Task testing', () => {
     const data = {hello: 'world'}
     
     try {
-      res = await Task.factory(data => data, {data})
+      res = await task(data => data, {data})
     } catch (err) {
       error = err
     }
@@ -70,7 +70,7 @@ describe('Task testing', () => {
     }
     
     try {
-      res = await Task.factory(() => ({hello, numb, bool, obj, arr}), {ctx})
+      res = await task(() => ({hello, numb, bool, obj, arr}), {ctx})
     } catch (err) {
       error = err
     }

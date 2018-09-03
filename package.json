@@ -1,17 +1,17 @@
 {
-  "name": "task",
+  "name": "thready",
   "version": "0.0.0",
-  "description": "My personal tryouts with Node.js threads. For now.",
-  "main": "index.js",
+  "description": "A tiny wrapper for Node.js worker_threads lib",
+  "main": "src/thready.js",
   "scripts": {
     "test": "node --experimental-worker node_modules/.bin/_mocha ./test",
-    "doc": "node_modules/.bin/gitbook "
+    "doc": "node_modules/.bin/gitbook build"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wilk/task.git"
   },
-  "author": "Vincenzo (Wilk)",
+  "author": "Vincenzo (Wilk) Ferrari",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/wilk/task/issues"
