@@ -1,7 +1,5 @@
 const {Worker, workerData} = require('worker_threads')
 
-const AsyncFunction = Object.getPrototypeOf(async () => {}).constructor
-
 const MISSING_HANDLER_ERROR = `
 task needs a function or a string.
 Try with:
