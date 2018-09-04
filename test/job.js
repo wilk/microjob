@@ -1,12 +1,12 @@
-const {task} = require('../src/thready')
-const assert = require('chai').assert
+const {job} = require('../src/job')
+const {assert} = require('chai')
 
-describe('Task testing', () => {
-  it('should execute an empty inline task', async () => {
+describe('Job testing', () => {
+  it('should execute an empty inline job', async () => {
     let error, res
     
     try {
-      res = await task(() => {
+      res = await job(() => {
         let i = 0
         for (i = 0; i < 1000000; i++) {}
   
@@ -20,10 +20,10 @@ describe('Task testing', () => {
     assert.equal(res, 1000000)
   })
 
-  it('should execute a list of inline tasks', async () => {
+  it('should execute a list of inline jobs', async () => {
     let error, results
 
-    let job = () => {
+    let task = () => {
       let i = 0
       for (i = 0; i < 1000000; i++) {}
 
@@ -31,7 +31,7 @@ describe('Task testing', () => {
     }
     
     try {
-      results = await Promise.all([task(job), task(job), task(job)])
+      results = await Promise.all([job(task), job(task), job(task)])
 
     } catch (err) {
       error = err
@@ -41,12 +41,12 @@ describe('Task testing', () => {
     assert.deepEqual(results, [1000000, 1000000, 1000000])
   })
 
-  it('should execute a an inline task with custom data', async () => {
+  it('should execute a an inline job with custom data', async () => {
     let error, res
     const data = {hello: 'world'}
     
     try {
-      res = await task(data => data, {data})
+      res = await job(data => data, {data})
     } catch (err) {
       error = err
     }
@@ -55,7 +55,7 @@ describe('Task testing', () => {
     assert.deepEqual(res, data)
   })
 
-  it('should execute a an inline task with custom context', async () => {
+  it('should execute a an inline job with custom context', async () => {
     let error, res
     const ctx = {
       hello: 'world',
@@ -70,7 +70,7 @@ describe('Task testing', () => {
     }
     
     try {
-      res = await task(() => ({hello, numb, bool, obj, arr}), {ctx})
+      res = await job(() => ({hello, numb, bool, obj, arr}), {ctx})
     } catch (err) {
       error = err
     }

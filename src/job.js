@@ -1,12 +1,12 @@
 const { Worker } = require('worker_threads')
 
 const MISSING_HANDLER_ERROR = `
-task needs a function or a string.
+job needs a function or a string.
 Try with:
-> task(() => {...}, config)
+> job(() => {...}, config)
 `
 
-function task(handler, config = { ctx: {}, data: {} }) {
+function job(handler, config = { ctx: {}, data: {} }) {
   return new Promise((resolve, reject) => {
     if (typeof handler === 'undefined' || handler === null) return reject(new Error(MISSING_HANDLER_ERROR))
 
@@ -71,4 +71,4 @@ function task(handler, config = { ctx: {}, data: {} }) {
   })
 }
 
-module.exports = { task }
+module.exports = { job }

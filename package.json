@@ -1,12 +1,12 @@
 {
-  "name": "thready",
+  "name": "microjob",
   "version": "0.0.1",
   "description": "A tiny wrapper for Node.js worker_threads lib",
-  "main": "src/thready.js",
+  "main": "src/job.js",
   "scripts": {
     "test": "node --experimental-worker node_modules/.bin/_mocha ./test",
     "doc": "node_modules/.bin/gitbook build",
-    "lint": "node_modules/.bin/eslint src/thready.js"
+    "lint": "node_modules/.bin/eslint src/job.js"
   },
   "engines": {
     "node": ">=10.5.0",
@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wilk/task.git"
+    "url": "git+https://github.com/wilk/microjob.git"
   },
   "author": {
     "email": "wilk3ert@gmail.com",
@@ -23,9 +23,9 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/wilk/task/issues"
+    "url": "https://github.com/wilk/microjob/issues"
   },
-  "homepage": "https://github.com/wilk/task#readme",
+  "homepage": "https://github.com/wilk/microjob#readme",
   "devDependencies": {
     "chai": "^4.1.2",
     "eslint": "^5.5.0",
