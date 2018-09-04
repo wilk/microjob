@@ -1,3 +1,5 @@
 docs
 node_modules
 test
+.eslintrc
+SUMMARY.md
