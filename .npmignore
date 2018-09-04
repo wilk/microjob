@@ -1,5 +1,5 @@
 docs
 node_modules
 test
-.eslintrc
+.eslintrc.js
 SUMMARY.md
