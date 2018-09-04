@@ -57,3 +57,51 @@ const { job } = require('microjob')
   }
 })()
 ```
+
+## Job data
+Passing custom data to the job is quite easy as calling a function:
+
+```js
+const { job } = require('microjob')
+
+(async () => {
+  try {
+    // this function will be executed in another thread
+    const res = await job(data => {
+      let i = 0
+      for (i = 0; i < data.counter; i++) {}
+
+      return i
+    }, {data: {counter: 1000000}})
+
+    console.log(res) // 1000000
+  } catch (err) {
+    console.error(err)
+  }
+})()
+```
+
+## Job context
+It's a common practice using the upper scope of the function's container to reuse the already defined variables.
+Achieving the same result can be done by passing the context object:
+
+```js
+const { job } = require('microjob')
+
+(async () => {
+  try {
+    // this function will be executed in another thread
+    const counter = 1000000
+    const res = await job(() => {
+      let i = 0
+      for (i = 0; i < counter; i++) {}
+
+      return i
+    }, {ctx: {counter}})
+
+    console.log(res) // 1000000
+  } catch (err) {
+    console.error(err)
+  }
+})()
+```

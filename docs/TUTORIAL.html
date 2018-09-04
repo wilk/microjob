@@ -211,6 +211,48 @@ A sync job is just a function working in background, in another thread, avoiding
   }
 })()
 </code></pre>
+<h2 id="job-data">Job data</h2>
+<p>Passing custom data to the job is quite easy as calling a function:</p>
+<pre><code class="lang-js"><span class="hljs-keyword">const</span> { job } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;microjob&apos;</span>)
+
+(<span class="hljs-keyword">async</span> () =&gt; {
+  <span class="hljs-keyword">try</span> {
+    <span class="hljs-comment">// this function will be executed in another thread</span>
+    <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> job(data =&gt; {
+      <span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>
+      <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; data.counter; i++) {}
+
+      <span class="hljs-keyword">return</span> i
+    }, {data: {counter: <span class="hljs-number">1000000</span>}})
+
+    <span class="hljs-built_in">console</span>.log(res) <span class="hljs-comment">// 1000000</span>
+  } <span class="hljs-keyword">catch</span> (err) {
+    <span class="hljs-built_in">console</span>.error(err)
+  }
+})()
+</code></pre>
+<h2 id="job-context">Job context</h2>
+<p>It&apos;s a common practice using the upper scope of the function&apos;s container to reuse the already defined variables.
+Achieving the same result can be done by passing the context object:</p>
+<pre><code class="lang-js"><span class="hljs-keyword">const</span> { job } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;microjob&apos;</span>)
+
+(<span class="hljs-keyword">async</span> () =&gt; {
+  <span class="hljs-keyword">try</span> {
+    <span class="hljs-comment">// this function will be executed in another thread</span>
+    <span class="hljs-keyword">const</span> counter = <span class="hljs-number">1000000</span>
+    <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> job(() =&gt; {
+      <span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>
+      <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; counter; i++) {}
+
+      <span class="hljs-keyword">return</span> i
+    }, {ctx: {counter}})
+
+    <span class="hljs-built_in">console</span>.log(res) <span class="hljs-comment">// 1000000</span>
+  } <span class="hljs-keyword">catch</span> (err) {
+    <span class="hljs-built_in">console</span>.error(err)
+  }
+})()
+</code></pre>
 
                                 
                                 </section>
@@ -250,7 +292,7 @@ A sync job is just a function working in background, in another thread, avoiding
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Tutorial","level":"1.2","depth":1,"previous":{"title":"Introduction","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"TUTORIAL.md","mtime":"2018-09-04T18:58:52.220Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-09-04T19:00:06.316Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Tutorial","level":"1.2","depth":1,"previous":{"title":"Introduction","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"TUTORIAL.md","mtime":"2018-09-04T21:49:09.347Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-09-04T21:49:50.211Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>
