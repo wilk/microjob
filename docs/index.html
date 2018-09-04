@@ -143,12 +143,32 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="task">task</h1>
-<p>My personal tryouts with <a href="">Node.js threads</a><a href="https://nodejs.org/api/worker_threads.htm" target="_blank">https://nodejs.org/api/worker_threads.htm</a>. For now.</p>
-<h2 id="usage">Usage</h2>
-<p>Use it with Node.js:</p>
-<pre><code>$ node --experimental-worker index.js
+                                <h1 id="microjob">Microjob</h1>
+<p>A tiny wrapper for turning <a href="https://nodejs.org/api/worker_threads.htm" target="_blank">Node.js threads</a> in easy-to-use routines for high CPU-bound.</p>
+<h2 id="requirements">Requirements</h2>
+<p><strong>Microjob</strong> can be used only with <strong>Node.js 10.5+</strong> and with the <strong>--experimental-worker</strong> flag activated, otherwise it won&apos;t work.</p>
+<h2 id="quick-example">Quick Example</h2>
+<pre><code class="lang-js"><span class="hljs-keyword">const</span> { job } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;microjob&apos;</span>)
+
+(<span class="hljs-keyword">async</span> () =&gt; {
+  <span class="hljs-keyword">try</span> {
+    <span class="hljs-comment">// this function will be executed in another thread</span>
+    <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> job(() =&gt; {
+      <span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>
+      <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">1000000</span>; i++) {}
+
+      <span class="hljs-keyword">return</span> i
+    })
+
+    <span class="hljs-built_in">console</span>.log(res) <span class="hljs-comment">// 1000000</span>
+  } <span class="hljs-keyword">catch</span> (err) {
+    <span class="hljs-built_in">console</span>.error(err)
+  }
+})()
 </code></pre>
+<h2 id="documentation">Documentation</h2>
+<p>Dive deep into the documentation to know more: <strong><a href="https://wilk.github.io/microjob/" target="_blank">https://wilk.github.io/microjob/</a></strong></p>
+
                                 
                                 </section>
                             
@@ -183,7 +203,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Introduction","level":"1.1","depth":1,"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"README.md","mtime":"2018-08-31T16:00:33.259Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-09-03T15:57:11.422Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Introduction","level":"1.1","depth":1,"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"README.md","mtime":"2018-09-04T07:21:11.373Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-09-04T07:22:32.192Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

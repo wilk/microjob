@@ -26,4 +26,4 @@ const { job } = require('microjob')
 ```
 
 ## Documentation
-Dive deep into the documentation to know more: **[https://wilk.github.io/microjob/docs/](https://wilk.github.io/microjob/docs/)**
+Dive deep into the documentation to know more: **[https://wilk.github.io/microjob/](https://wilk.github.io/microjob/)**
