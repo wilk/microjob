@@ -18,6 +18,8 @@ function job(handler, config = { ctx: {}, data: {} }) {
     } else if (typeof handler === 'function') {
       let variables = ''
       for (const key in config.ctx) {
+        if (!config.ctx.hasOwnProperty(key)) continue
+
         let variable
         switch (typeof config.ctx[key]) {
           case 'string':
