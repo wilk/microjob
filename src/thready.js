@@ -6,7 +6,7 @@ Try with:
 > task(() => {...}, config)
 `
 
-function task(handler, config = {ctx: {}, data: {}}) {
+function task(handler, config = { ctx: {}, data: {} }) {
   return new Promise((resolve, reject) => {
     if (typeof handler === 'undefined' || handler === null) return reject(new Error(MISSING_HANDLER_ERROR))
 
@@ -71,4 +71,4 @@ function task(handler, config = {ctx: {}, data: {}}) {
   })
 }
 
-module.exports = {task}
+module.exports = { task }
