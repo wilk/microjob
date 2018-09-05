@@ -1,5 +1,5 @@
-# Tutorial
-This tutorial helps using `microjob` with ease, involving simple and quick examples.
+# API
+This documentation helps using `microjob` with ease, involving simple and quick examples.
 
 ## Sync job
 The common and most used example is the sync job.
