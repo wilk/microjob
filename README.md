@@ -14,9 +14,9 @@ Quoting the documentation:
 
 ## Quick Example
 ```js
-const { job } = require('microjob')
-
 (async () => {
+  const { job } = require('microjob')
+
   try {
     // this function will be executed in another thread
     const res = await job(() => {

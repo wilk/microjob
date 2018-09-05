@@ -6,9 +6,9 @@ The common and most used example is the sync job.
 A sync job is just a function working in background, in another thread, avoiding to block the main thread with heavy CPU load, made of sync function calls.
 
 ```js
-const { job } = require('microjob')
-
 (async () => {
+  const { job } = require('microjob')
+
   try {
     // this function will be executed in another thread
     const res = await job(() => {
@@ -33,9 +33,9 @@ const { job } = require('microjob')
 An asynchronous job is a task with at least one async call: for instance, a query to a DB, a HTTP request, a file system call, etc, and of course plus a heavy CPU load.
 
 ```js
-const { job } = require('microjob')
-
 (async () => {
+  const { job } = require('microjob')
+
   try {
     // this function will be executed in another thread
     const res = await job(async () => {
@@ -62,9 +62,9 @@ const { job } = require('microjob')
 Passing custom data to the job is quite easy as calling a function:
 
 ```js
-const { job } = require('microjob')
-
 (async () => {
+  const { job } = require('microjob')
+
   try {
     // this function will be executed in another thread
     const res = await job(data => {
@@ -86,9 +86,9 @@ It's a common practice using the upper scope of the function's container to reus
 Achieving the same result can be done by passing the context object:
 
 ```js
-const { job } = require('microjob')
-
 (async () => {
+  const { job } = require('microjob')
+
   try {
     // this function will be executed in another thread
     const counter = 1000000
