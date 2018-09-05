@@ -57,7 +57,7 @@
     <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="TUTORIAL.html" />
+    <link rel="next" href="API.html" />
     
     
 
@@ -98,18 +98,24 @@
             
 
             
-        </li>
+            <ul class="articles">
+                
     
-        <li class="chapter " data-level="1.2" data-path="TUTORIAL.html">
+        <li class="chapter " data-level="1.1.1" data-path="API.html">
             
-                <a href="TUTORIAL.html">
+                <a href="API.html">
             
                     
-                    Tutorial
+                    API
             
                 </a>
             
 
+            
+        </li>
+    
+
+            </ul>
             
         </li>
     
@@ -159,8 +165,15 @@
                                 <section class="normal markdown-section">
                                 
                                 <h1 id="microjob">Microjob</h1>
-<p>A tiny wrapper for turning <a href="https://nodejs.org/api/worker_threads.htm" target="_blank">Node.js threads</a> in easy-to-use routines for high CPU-bound.</p>
-<h2 id="requirements">Requirements</h2>
+<p>A tiny wrapper for turning <a href="https://nodejs.org/api/worker_threads.htm" target="_blank">Node.js threads</a> in easy-to-use routines for CPU-bound.</p>
+<h2 id="introduction">Introduction</h2>
+<p>Microjob is a tiny wrapper for Node.js threads and is intended to perform heavy CPU loads using anonymous functions.
+So, Microjob treats Node.js threads as temporary working units: if you need to spawn a long-living thread, then you should use the <a href="https://nodejs.org/api/worker_threads.html" target="_blank">default API</a>.</p>
+<p>Microjob follows the same line of the original Node.js documentation: use it only for CPU-bound jobs and not for I/O-bound purposes.
+Quoting the documentation:</p>
+<blockquote>
+<p>Workers are useful for performing CPU-intensive JavaScript operations; do not use them for I/O, since Node.js&#x2019;s built-in mechanisms for performing operations asynchronously already treat it more efficiently than Worker threads can.</p>
+</blockquote>
 <p><strong>Microjob</strong> can be used only with <strong>Node.js 10.5+</strong> and with the <strong>--experimental-worker</strong> flag activated, otherwise it won&apos;t work.</p>
 <h2 id="quick-example">Quick Example</h2>
 <pre><code class="lang-js"><span class="hljs-keyword">const</span> { job } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;microjob&apos;</span>)
@@ -170,7 +183,9 @@
     <span class="hljs-comment">// this function will be executed in another thread</span>
     <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> job(() =&gt; {
       <span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>
-      <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">1000000</span>; i++) {}
+      <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">1000000</span>; i++) {
+        <span class="hljs-comment">// heavy CPU load ...</span>
+      }
 
       <span class="hljs-keyword">return</span> i
     })
@@ -182,7 +197,7 @@
 })()
 </code></pre>
 <h2 id="documentation">Documentation</h2>
-<p>Dive deep into the documentation to know more: <strong><a href="https://wilk.github.io/microjob/" target="_blank">https://wilk.github.io/microjob/</a></strong></p>
+<p>Dive deep into the documentation to find more examples: <strong><a href="API.html">API</a></strong></p>
 
                                 
                                 </section>
@@ -211,7 +226,7 @@
             
                 
                 
-                <a href="TUTORIAL.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Tutorial">
+                <a href="API.html" class="navigation navigation-next navigation-unique" aria-label="Next page: API">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -222,7 +237,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Introduction","level":"1.1","depth":1,"next":{"title":"Tutorial","level":"1.2","depth":1,"path":"TUTORIAL.md","ref":"TUTORIAL.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"README.md","mtime":"2018-09-04T07:21:11.373Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-09-04T21:49:50.211Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Introduction","level":"1.1","depth":1,"next":{"title":"API","level":"1.1.1","depth":2,"path":"API.md","ref":"API.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"README.md","mtime":"2018-09-05T06:40:22.746Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-09-05T06:41:39.674Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

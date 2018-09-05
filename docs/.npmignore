@@ -3,3 +3,4 @@ node_modules
 test
 .eslintrc.js
 SUMMARY.md
+API.md
