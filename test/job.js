@@ -78,4 +78,32 @@ describe('Job testing', () => {
     assert.isUndefined(error)
     assert.deepEqual(res, {hello: ctx.hello, numb: ctx.numb, bool: ctx.bool, obj: ctx.obj, arr: ctx.arr})
   })
+
+  it('should not return a function', async () => {
+    let error, res
+    try {
+      res = await job(() => (() => console.log('hello there')))
+    } catch (err) {
+      error = err
+    }
+
+    assert.isNotNull(error)
+    assert.equal(error.message, "() => console.log('hello there') could not be cloned.")
+    assert.isString(error.stack)
+    assert.isUndefined(res)
+  })
+
+  it('should catch job errors', async () => {
+    let error, res
+    try {
+      res = await job(() => { throw new Error('an exception') })
+    } catch (err) {
+      error = err
+    }
+
+    assert.isNotNull(error)
+    assert.equal(error.message, 'an exception')
+    assert.isString(error.stack)
+    assert.isUndefined(res)
+  })
 })
