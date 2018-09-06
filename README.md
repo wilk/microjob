@@ -1,5 +1,5 @@
 # Microjob
-A tiny wrapper for turning [Node.js threads](https://nodejs.org/api/worker_threads.htm) in easy-to-use routines for CPU-bound.
+A tiny wrapper for turning [Node.js threads](https://nodejs.org/api/worker_threads.html) in easy-to-use routines for CPU-bound.
 
 ## Introduction
 Microjob is a tiny wrapper for Node.js threads and is intended to perform heavy CPU loads using anonymous functions.
