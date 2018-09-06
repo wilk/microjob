@@ -101,8 +101,36 @@ describe('Job testing', () => {
       error = err
     }
 
-    assert.isNotNull(error)
+    assert.exists(error)
     assert.equal(error.message, 'an exception')
+    assert.isString(error.stack)
+    assert.isUndefined(res)
+  })
+
+  it('should throw a serialization error for wrong data', async () => {
+    let error, res
+    try {
+      res = await job(data => console.log(data.fn), {data: {fn: () => console.log('hello there')}})
+    } catch (err) {
+      error = err
+    }
+
+    assert.exists(error)
+    assert.equal(error.message, "() => console.log('hello there') could not be cloned.")
+    assert.isString(error.stack)
+    assert.isUndefined(res)
+  })
+
+  it('should throw an error if the worker is not a function', async () => {
+    let error, res
+    try {
+      res = await job('./worker.js')
+    } catch (err) {
+      error = err
+    }
+
+    assert.exists(error)
+    assert.equal(error.message, `job needs a function.\nTry with:\n> job(() => {...}, config)`)
     assert.isString(error.stack)
     assert.isUndefined(res)
   })
