@@ -12,6 +12,13 @@ Quoting the documentation:
 
 **Microjob** can be used only with **Node.js 10.5+** and with the **--experimental-worker** flag activated, otherwise it won't work.
 
+## Installation
+Via **npm**:
+
+```bash
+$ npm install --save microjob
+```
+
 ## Quick Example
 ```js
 (async () => {
