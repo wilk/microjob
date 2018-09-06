@@ -1,21 +1,13 @@
 const { Worker } = require('worker_threads')
+const v8 = require('v8')
 
-const MISSING_HANDLER_ERROR = `
-job needs a function or a string.
-Try with:
-> job(() => {...}, config)
-`
+const MISSING_HANDLER_ERROR = `job needs a function.\nTry with:\n> job(() => {...}, config)`
 
 function job(handler, config = { ctx: {}, data: {} }) {
   return new Promise((resolve, reject) => {
-    if (typeof handler === 'undefined' || handler === null) return reject(new Error(MISSING_HANDLER_ERROR))
+    if (typeof handler !== 'function') return reject(new Error(MISSING_HANDLER_ERROR))
 
-    let worker
-    if (typeof handler === 'string') {
-      worker = new Worker(handler, {
-        workerData: config.data
-      })
-    } else if (typeof handler === 'function') {
+    try {
       let variables = ''
       for (const key in config.ctx) {
         if (!config.ctx.hasOwnProperty(key)) continue
@@ -34,7 +26,6 @@ function job(handler, config = { ctx: {}, data: {} }) {
         variables += `let ${key} = ${variable}\n`
       }
 
-      // @todo: issue with functions and classes on postMessage (v8.serialize does not work)
       const workerStr = `
       (async function () {
         const {parentPort, workerData} = require('worker_threads')
@@ -65,26 +56,31 @@ function job(handler, config = { ctx: {}, data: {} }) {
         }
       })()
       `
-      worker = new Worker(workerStr, {
+
+      // check for serialization's error, due to this issue: https://github.com/nodejs/node/issues/22736
+      v8.serialize(config.data)
+      const worker = new Worker(workerStr, {
         eval: true,
         workerData: config.data
       })
-    } else return reject(new Error(MISSING_HANDLER_ERROR))
 
-    worker.on('message', message => {
-      if (message.error) {
-        const error = new Error(message.error.message)
-        error.stack = message.error.stack
+      worker.on('message', message => {
+        if (message.error) {
+          const error = new Error(message.error.message)
+          error.stack = message.error.stack
+          reject(error)
+        } else resolve(message.data)
+
+        worker.unref()
+      })
+
+      worker.on('error', error => {
         reject(error)
-      } else resolve(message.data)
-
-      worker.unref()
-    })
-
-    worker.on('error', error => {
-      reject(error)
-      worker.unref()
-    })
+        worker.unref()
+      })
+    } catch (err) {
+      reject(err)
+    }
   })
 }
 
