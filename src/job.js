@@ -47,10 +47,22 @@ function job(handler, config = { ctx: {}, data: {} }) {
         try {
           response.data = await (${handler.toString()})(workerData)
         } catch (err) {
-          response.error = err
+          response.error = {
+            message: err.message,
+            stack: err.stack
+          }
         }
 
-        parentPort.postMessage(response)
+        try {
+          parentPort.postMessage(response)
+        } catch (err) {
+          response.data = null
+          response.error = {
+            message: err.message,
+            stack: err.stack
+          }
+          parentPort.postMessage(response)
+        }
       })()
       `
       worker = new Worker(workerStr, {
@@ -60,8 +72,11 @@ function job(handler, config = { ctx: {}, data: {} }) {
     } else return reject(new Error(MISSING_HANDLER_ERROR))
 
     worker.on('message', message => {
-      if (message.error) reject(message.error)
-      else resolve(message.data)
+      if (message.error) {
+        const error = new Error(message.error.message)
+        error.stack = message.error.stack
+        reject(error)
+      } else resolve(message.data)
 
       worker.unref()
     })
