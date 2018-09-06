@@ -32,7 +32,6 @@
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
     "gitbook-cli": "^2.3.2",
-    "mocha": "^5.2.0",
-    "sinon": "^6.1.5"
+    "mocha": "^5.2.0"
   }
 }
