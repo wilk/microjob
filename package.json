@@ -5,8 +5,9 @@
   "main": "src/job.js",
   "scripts": {
     "test": "node --experimental-worker node_modules/.bin/_mocha ./test",
-    "doc": "node_modules/.bin/gitbook build . docs",
-    "lint": "node_modules/.bin/eslint src/job.js"
+    "docs": "gitbook build . docs",
+    "serve-docs": "gitbook serve",
+    "lint": "eslint src/job.js"
   },
   "engines": {
     "node": ">=10.5.0",
