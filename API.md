@@ -81,8 +81,14 @@ Passing custom data to the job is quite easy as calling a function:
 })()
 ```
 
+Both data passed to the worker and the returned one are serialized with [v8 serializer](https://nodejs.org/api/v8.html#v8_v8_serialize_value): this means that only some JS data structures are allowed (for instance, functions and classes are forbidden).
+
 ## Job context
 It's a common practice using the upper scope of the function's container to reuse the already defined variables.
+
+**Context is evaluated inside the worker thread. This means it needs to be sanitized before passing it to microjob.
+An attacker could perform a JS injection as described [in this issue](https://github.com/wilk/microjob/issues/2)**
+
 Achieving the same result can be done by passing the context object:
 
 ```js
