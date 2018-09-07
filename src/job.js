@@ -27,6 +27,13 @@ function job(handler, config = { ctx: {}, data: {} }) {
       }
 
       const workerStr = `
+      async function executor(data) {
+        ${variables}
+        return await (${handler.toString()})(data)
+      }
+      `
+
+      /*const workerStr = `
       (async function () {
         const {parentPort, workerData} = require('worker_threads')
         ${variables}
@@ -62,6 +69,13 @@ function job(handler, config = { ctx: {}, data: {} }) {
       const worker = new Worker(workerStr, {
         eval: true,
         workerData: config.data
+      })*/
+
+      v8.serialize(config.data)
+      const worker = new Worker('./src/worker.js', { workerData: config.data })
+
+      worker.on('online', () => {
+        worker.postMessage(workerStr)
       })
 
       worker.on('message', message => {
