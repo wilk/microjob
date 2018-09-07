@@ -44,3 +44,9 @@ $ npm install --save microjob
 
 ## Documentation
 Dive deep into the documentation to find more examples: **[API](API.md)**
+
+## Known Issues
+* **[sanitize worker context](API.md#job-context)**
+
+## Known Limitations
+* **[serialize worker data](API.md#job-data)**
