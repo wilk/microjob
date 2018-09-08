@@ -15,8 +15,8 @@ const POOL_STATE_STARTING = 'starting'
 // todo: then put the worker in the "busy workers list" and free it (put back in the "idle workers list") when it has finished working
 // todo: if the idle workers list is empty, spawn a new worker
 
-const availableWorkers = {}
-const busyWorkers = {}
+const availableWorkers = new Map()
+const busyWorkers = new Map()
 const cpusLen = os.cpus().length
 let poolState = POOL_STATE_STARTING
 function init(config = { poolLimit: cpusLen }) {
@@ -37,13 +37,14 @@ function init(config = { poolLimit: cpusLen }) {
       reject(error)
     }
 
+    console.log('before for')
     for (let i = 0; i < config.poolLimit; i++) {
       const worker = new Worker('./src/worker.js')
 
       worker.once('online', onWorkerOnline)
       worker.once('error', onWorkerError)
 
-      availableWorkers[worker.threadId] = worker
+      availableWorkers.set(worker.threadId, worker)
     }
   })
 }
@@ -52,8 +53,8 @@ const pendingWorkers = []
 
 function initJob({ handler, config, resolve, reject, worker }) {
   try {
-    busyWorkers[worker.threadId] = worker
-    delete availableWorkers[worker.threadId]
+    busyWorkers.set(worker.threadId, worker)
+    availableWorkers.delete(worker.threadId)
 
     let variables = ''
     for (const key in config.ctx) {
@@ -88,26 +89,26 @@ function initJob({ handler, config, resolve, reject, worker }) {
       if (message.error) {
         const error = new Error(message.error.message)
         error.stack = message.error.stack
-        availableWorkers[worker.threadId] = worker
-        delete busyWorkers[worker.threadId]
+        availableWorkers.set(worker.threadId, worker)
+        busyWorkers.delete(worker.threadId)
         reject(error)
       } else {
-        availableWorkers[worker.threadId] = worker
-        delete busyWorkers[worker.threadId]
+        availableWorkers.set(worker.threadId, worker)
+        busyWorkers.delete(worker.threadId)
         resolve(message.data)
       }
     })
 
     worker.once('error', error => {
-      availableWorkers[worker.threadId] = worker
-      delete busyWorkers[worker.threadId]
+      availableWorkers.set(worker.threadId, worker)
+      busyWorkers.delete(worker.threadId)
       reject(error)
     })
 
     worker.postMessage(workerStr)
   } catch (err) {
-    availableWorkers[worker.threadId] = worker
-    delete busyWorkers[worker.threadId]
+    availableWorkers.set(worker.threadId, worker)
+    busyWorkers.delete(worker.threadId)
     reject(err)
   }
 }
@@ -125,8 +126,18 @@ function job(handler, config = { ctx: {}, data: {} }) {
 
     // todo: check if there's at least one available worker
     // todo: fetch that worker otherwise spawn a new one
-    initJob({ handler, config, resolve, reject })
+    if (availableWorkers.size === 0) {
+      const worker = new Worker('./src/worker.js')
+
+      worker.once('online', () => {
+        availableWorkers.set(worker.threadId, worker)
+        initJob({ handler, config, resolve, reject, worker })
+      })
+    } else {
+      const worker = availableWorkers.values()[0]
+      initJob({ handler, config, resolve, reject, worker })
+    }
   })
 }
 
-module.exports = { job }
+module.exports = { job, init }
