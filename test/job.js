@@ -1,7 +1,11 @@
-const {job} = require('../src/job')
+const {job, init} = require('../src/job')
 const {assert} = require('chai')
 
 describe('Job testing', () => {
+  before(async () => {
+    await init()
+  })
+
   it('should execute an empty inline job', async () => {
     let error, res
     
