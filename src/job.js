@@ -28,6 +28,7 @@ function init(config = { poolLimit: cpusLen }) {
       onlineWorkers++
       if (onlineWorkers === config.poolLimit) {
         poolState = POOL_STATE_READY
+        // todo: check for pending workers and execute them
         resolve()
       }
     }
@@ -122,7 +123,9 @@ function job(handler, config = { ctx: {}, data: {} }) {
 
     if (poolState === POOL_STATE_STARTING) return pendingWorkers.push({ handler, config, resolve, reject })
 
-    initJob({handler, config, resolve, reject})
+    // todo: check if there's at least one available worker
+    // todo: fetch that worker otherwise spawn a new one
+    initJob({ handler, config, resolve, reject })
   })
 }
 
