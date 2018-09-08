@@ -10,14 +10,6 @@ parentPort.on('message', async worker => {
     eval(worker)
     // __executor__ is defined in worker
     response.data = await __executor__()
-  } catch (err) {
-    response.error = {
-      message: err.message,
-      stack: err.stack
-    }
-  }
-
-  try {
     parentPort.postMessage(response)
   } catch (err) {
     response.data = null
