@@ -7,9 +7,8 @@ parentPort.on('message', async worker => {
   }
 
   try {
-    console.log(worker)
     eval(worker)
-    response.data = await executor(workerData)
+    response.data = await __executor__(workerData)
   } catch (err) {
     response.error = {
       message: err.message,
