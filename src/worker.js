@@ -1,4 +1,4 @@
-const { parentPort, workerData } = require('worker_threads')
+const { parentPort } = require('worker_threads')
 
 parentPort.on('message', async worker => {
   const response = {
@@ -8,7 +8,8 @@ parentPort.on('message', async worker => {
 
   try {
     eval(worker)
-    response.data = await __executor__(workerData)
+    // __executor__ is defined in worker
+    response.data = await __executor__()
   } catch (err) {
     response.error = {
       message: err.message,
