@@ -1,7 +1,9 @@
 const { Worker } = require('worker_threads')
 const v8 = require('v8')
+const os = require('os')
 
 const MISSING_HANDLER_ERROR = `job needs a function.\nTry with:\n> job(() => {...}, config)`
+const WRONG_CONTEXT_ERROR = `job needs an object as ctx.\nTry with:\n> job(() => {...}, {ctx: {...}})`
 
 // todo: spawn os.cpus().length threads
 // todo: save them with their ids
@@ -10,9 +12,18 @@ const MISSING_HANDLER_ERROR = `job needs a function.\nTry with:\n> job(() => {..
 // todo: then put the worker in the "busy workers list" and free it (put back in the "idle workers list") when it has finished working
 // todo: if the idle workers list is empty, spawn a new worker
 
+/*for (let i = 0; i < os.cpus().length; i++) {
+
+}*/
+
 function job(handler, config = { ctx: {}, data: {} }) {
   return new Promise((resolve, reject) => {
     if (typeof handler !== 'function') return reject(new Error(MISSING_HANDLER_ERROR))
+
+    config.ctx = config.ctx || {}
+    config.data = config.data || {}
+
+    if (typeof config.ctx !== 'object') return reject(new Error(WRONG_CONTEXT_ERROR))
 
     try {
       let variables = ''
@@ -33,53 +44,16 @@ function job(handler, config = { ctx: {}, data: {} }) {
         variables += `let ${key} = ${variable}\n`
       }
 
+      const dataStr = JSON.stringify(config.data)
       const workerStr = `
-      async function __executor__(data) {
+      async function __executor__() {
         ${variables}
-        return await (${handler.toString()})(data)
+        return await (${handler.toString()})(JSON.parse('${dataStr}'))
       }
       `
-
-      /*const workerStr = `
-      (async function () {
-        const {parentPort, workerData} = require('worker_threads')
-        ${variables}
-        const response = {
-          err: null,
-          data: null
-        }
-        
-        try {
-          response.data = await (${handler.toString()})(workerData)
-        } catch (err) {
-          response.error = {
-            message: err.message,
-            stack: err.stack
-          }
-        }
-
-        try {
-          parentPort.postMessage(response)
-        } catch (err) {
-          response.data = null
-          response.error = {
-            message: err.message,
-            stack: err.stack
-          }
-          parentPort.postMessage(response)
-        }
-      })()
-      `
-
-      // check for serialization's error, due to this issue: https://github.com/nodejs/node/issues/22736
       v8.serialize(config.data)
-      const worker = new Worker(workerStr, {
-        eval: true,
-        workerData: config.data
-      })*/
 
-      v8.serialize(config.data)
-      const worker = new Worker('./src/worker.js', { workerData: config.data })
+      const worker = new Worker('./src/worker.js')
 
       worker.on('online', () => {
         worker.postMessage(workerStr)
