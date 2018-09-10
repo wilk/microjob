@@ -1,6 +1,21 @@
 # API
 This documentation helps using `microjob` with ease, involving simple and quick examples.
 
+## Worker Pool
+![Worker Pool](public/worker-pool.png "Worker Pool")
+
+[Image taken from Wikipedia](https://en.wikipedia.org/wiki/Thread_pool#/media/File:Thread_pool.svg)
+
+microjob implements the [Thread Pool pattern](https://en.wikipedia.org/wiki/Thread_pool), called worker pool.
+The worker pool spawns a set of threads, default equals to the number of cpus.
+It can be tuned with the environment variable `MAX_WORKERS`:
+
+```bash
+$ export MAX_WORKERS=10; node --experimental-worker index.js
+```
+
+Invoking `job` on a function will put it on a task queue and then, when a worker is available, it will be executed, returning the desired result or an error.
+
 ## Sync job
 The common and most used example is the sync job.
 A sync job is just a function working in background, in another thread, avoiding to block the main thread with heavy CPU load, made of sync function calls.
@@ -111,3 +126,31 @@ Achieving the same result can be done by passing the context object:
   }
 })()
 ```
+
+## Graceful shutdown
+When you don't need microjob anymore, you can shut it down with the `stop` function:
+
+```js
+(async () => {
+  const { job, stop } = require('microjob')
+
+  try {
+    // this function will be executed in another thread
+    const counter = 1000000
+    const res = await job(() => {
+      let i = 0
+      for (i = 0; i < counter; i++) {}
+
+      return i
+    }, {ctx: {counter}})
+
+    console.log(res) // 1000000
+  } catch (err) {
+    console.error(err)
+  }
+
+  stop()
+})()
+```
+
+`stop` ensures that every worker of the worker pool is terminated.
