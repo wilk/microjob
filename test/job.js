@@ -1,11 +1,7 @@
-const {job, start, stop} = require('../src/job')
+const {job, stop} = require('../src/job')
 const {assert} = require('chai')
 
 describe('Job testing', () => {
-  before(async () => {
-    await start()
-  })
-
   it('should execute an empty inline job', async () => {
     let error, res
     
@@ -139,7 +135,7 @@ describe('Job testing', () => {
     assert.isUndefined(res)
   })
 
-  after(async () => {
-    await stop()
+  after(() => {
+    stop()
   })
 })
