@@ -68,6 +68,7 @@ class WorkerPool extends EventEmitter {
         this.workers[i].status = WORKER_STATE_READY
         // remove previous listeners
         this.workers[i].worker.removeAllListeners()
+        this.tick()
         break
       }
     }
