@@ -1,6 +1,12 @@
 const {job, stop} = require('../src/job')
 const {assert} = require('chai')
 
+// todo: split job test in different files:
+//       - one for working job
+//       - one for worker pool
+//       - one for context
+//       - one for data
+
 describe('Job testing', () => {
   it('should execute an empty inline job', async () => {
     let error, res
