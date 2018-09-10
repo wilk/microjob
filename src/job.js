@@ -5,13 +5,6 @@ const workerPool = require('./worker-pool')
 const MISSING_HANDLER_ERROR = `job needs a function.\nTry with:\n> job(() => {...}, config)`
 const WRONG_CONTEXT_ERROR = `job needs an object as ctx.\nTry with:\n> job(() => {...}, {ctx: {...}})`
 
-// todo: spawn os.cpus().length threads
-// todo: save them with their ids
-// todo: wait for them to be online and then resolve the initialization
-// todo: when someone invokes job, send the worker to the job
-// todo: then put the worker in the "busy workers list" and free it (put back in the "idle workers list") when it has finished working
-// todo: if the idle workers list is empty, spawn a new worker
-
 workerPool.on('tick', ({work, worker}) => {
   const { handler, config, resolve, reject } = work
 
