@@ -166,6 +166,15 @@
                                 
                                 <h1 id="api">API</h1>
 <p>This documentation helps using <code>microjob</code> with ease, involving simple and quick examples.</p>
+<h2 id="worker-pool">Worker Pool</h2>
+<p><img src="public/worker-pool.png" alt="Worker Pool" title="Worker Pool"></p>
+<p><a href="https://en.wikipedia.org/wiki/Thread_pool#/media/File:Thread_pool.svg" target="_blank">Image taken from Wikipedia</a></p>
+<p>microjob implements the <a href="https://en.wikipedia.org/wiki/Thread_pool" target="_blank">Thread Pool pattern</a>, called worker pool.
+The worker pool spawns a set of threads, default equals to the number of cpus.
+It can be tuned with the environment variable <code>MAX_WORKERS</code>:</p>
+<pre><code class="lang-bash">$ <span class="hljs-built_in">export</span> MAX_WORKERS=10; node --experimental-worker index.js
+</code></pre>
+<p>Invoking <code>job</code> on a function will put it on a task queue and then, when a worker is available, it will be executed, returning the desired result or an error.</p>
 <h2 id="sync-job">Sync job</h2>
 <p>The common and most used example is the sync job.
 A sync job is just a function working in background, in another thread, avoiding to block the main thread with heavy CPU load, made of sync function calls.</p>
@@ -262,6 +271,30 @@ An attacker could perform a JS injection as described <a href="https://github.co
   }
 })()
 </code></pre>
+<h2 id="graceful-shutdown">Graceful shutdown</h2>
+<p>When you don&apos;t need microjob anymore, you can shut it down with the <code>stop</code> function:</p>
+<pre><code class="lang-js">(<span class="hljs-keyword">async</span> () =&gt; {
+  <span class="hljs-keyword">const</span> { job, stop } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;microjob&apos;</span>)
+
+  <span class="hljs-keyword">try</span> {
+    <span class="hljs-comment">// this function will be executed in another thread</span>
+    <span class="hljs-keyword">const</span> counter = <span class="hljs-number">1000000</span>
+    <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> job(() =&gt; {
+      <span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>
+      <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; counter; i++) {}
+
+      <span class="hljs-keyword">return</span> i
+    }, {ctx: {counter}})
+
+    <span class="hljs-built_in">console</span>.log(res) <span class="hljs-comment">// 1000000</span>
+  } <span class="hljs-keyword">catch</span> (err) {
+    <span class="hljs-built_in">console</span>.error(err)
+  }
+
+  stop()
+})()
+</code></pre>
+<p><code>stop</code> ensures that every worker of the worker pool is terminated.</p>
 
                                 
                                 </section>
@@ -301,7 +334,7 @@ An attacker could perform a JS injection as described <a href="https://github.co
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"API","level":"1.1.1","depth":2,"previous":{"title":"Introduction","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[{"title":"API","level":"1.1.1","depth":2,"path":"API.md","ref":"API.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"API.md","mtime":"2018-09-07T11:38:42.803Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-09-07T11:40:46.146Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"API","level":"1.1.1","depth":2,"previous":{"title":"Introduction","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[{"title":"API","level":"1.1.1","depth":2,"path":"API.md","ref":"API.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"API.md","mtime":"2018-09-10T18:54:52.018Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-09-10T18:55:03.354Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>
