@@ -16,15 +16,23 @@ class WorkerPool extends EventEmitter {
       const worker = new Worker('./src/worker.js')
 
       worker.once('online', () => {
-        this.workers.push({
-          status: WORKER_STATE_READY,
-          worker
-        })
+        // next tick, so the worker js gets interpreted
+        process.nextTick(() => {
+          this.workers.push({
+            status: WORKER_STATE_READY,
+            worker
+          })
 
-        this.tick()
+          // remove previous listeners, like the startup error handler
+          worker.removeAllListeners()
+
+          this.tick()
+        })
       })
-      worker.once('error', () => {
-        // todo: what to do if a thread doesn't come up? retry? raise an exception?
+
+      // startup error handler: should not be thrown or at least handled
+      worker.once('error', error => {
+        throw error
       })
     }
   }
@@ -58,6 +66,8 @@ class WorkerPool extends EventEmitter {
     for (let i = 0; i < this.workers.length; i++) {
       if (worker.threadId === this.workers[i].worker.threadId) {
         this.workers[i].status = WORKER_STATE_READY
+        // remove previous listeners
+        this.workers[i].worker.removeAllListeners()
         break
       }
     }
