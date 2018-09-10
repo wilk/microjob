@@ -43,25 +43,21 @@ workerPool.on('tick', ({work, worker}) => {
         const error = new Error(message.error.message)
         error.stack = message.error.stack
         workerPool.free(worker)
-        console.log('*** INIT JOB - REJECTING ***')
         reject(error)
       } else {
         workerPool.free(worker)
-        console.log('*** INIT JOB - RESOLVING ***')
         resolve(message.data)
       }
     })
 
     worker.once('error', error => {
       workerPool.free(worker)
-      console.log('*** INIT JOB - REJECTING ***')
       reject(error)
     })
 
     worker.postMessage(workerStr)
   } catch (err) {
     workerPool.free(worker)
-    console.log('*** INIT JOB - REJECTING ***')
     reject(err)
   }
 })
