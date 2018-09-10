@@ -5,7 +5,7 @@ const workerPool = require('./worker-pool')
 const MISSING_HANDLER_ERROR = `job needs a function.\nTry with:\n> job(() => {...}, config)`
 const WRONG_CONTEXT_ERROR = `job needs an object as ctx.\nTry with:\n> job(() => {...}, {ctx: {...}})`
 
-workerPool.on('tick', ({work, worker}) => {
+workerPool.on('tick', ({ work, worker }) => {
   const { handler, config, resolve, reject } = work
 
   try {
@@ -39,15 +39,13 @@ workerPool.on('tick', ({work, worker}) => {
     v8.serialize(config.data)
 
     worker.once('message', message => {
-      if (message.error) {
-        const error = new Error(message.error.message)
-        error.stack = message.error.stack
-        workerPool.free(worker)
-        reject(error)
-      } else {
-        workerPool.free(worker)
-        resolve(message.data)
-      }
+      workerPool.free(worker)
+
+      if (typeof message.error === 'undefined' || message.error === null) return resolve(message.data)
+
+      const error = new Error(message.error.message)
+      error.stack = message.error.stack
+      reject(error)
     })
 
     worker.once('error', error => {
