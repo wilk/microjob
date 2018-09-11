@@ -1,5 +1,5 @@
-const { assert } = require('chai')
-const { job, stop } = require('../src/job')
+import { assert } from 'chai'
+import { job, stop } from '../src/job'
 
 describe('Job Testing', () => {
   it('should execute an empty inline job', async () => {
@@ -79,6 +79,7 @@ describe('Job Testing', () => {
     let res
 
     try {
+      // @ts-ignore
       res = await job('./worker.js')
     } catch (err) {
       error = err

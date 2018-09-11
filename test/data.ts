@@ -1,5 +1,5 @@
-const { assert } = require('chai')
-const { job, stop } = require('../src/job')
+import { assert } from 'chai'
+import { job, stop } from '../src/job'
 
 describe('Job Data Testing', () => {
   it('should execute a an inline job with custom data', async () => {

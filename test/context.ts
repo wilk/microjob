@@ -1,5 +1,5 @@
-const { assert } = require('chai')
-const { job, stop } = require('../src/job')
+import { assert } from 'chai'
+import { job, stop } from '../src/job'
 
 describe('Job Context Testing', () => {
   it('should execute a an inline job with custom context', async () => {
@@ -19,6 +19,7 @@ describe('Job Context Testing', () => {
     }
 
     try {
+      // @ts-ignore
       res = await job(() => ({ hello, numb, bool, obj, arr }), { ctx })
     } catch (err) {
       error = err

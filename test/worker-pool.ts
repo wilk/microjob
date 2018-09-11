@@ -1,5 +1,5 @@
-const { assert } = require('chai')
-const { job, stop } = require('../src/job')
+import { assert } from 'chai'
+import { job, stop } from '../src/job'
 
 describe('Worker Pool Testing', () => {
   it('should execute at most 4 jobs at a time', async () => {
