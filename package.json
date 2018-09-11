@@ -28,11 +28,14 @@
   },
   "homepage": "https://github.com/wilk/microjob#readme",
   "devDependencies": {
+    "@types/node": "^10.9.4",
     "chai": "^4.1.2",
     "eslint": "^5.5.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
     "gitbook-cli": "^2.3.2",
-    "mocha": "^5.2.0"
+    "mocha": "^5.2.0",
+    "tslint": "^5.11.0",
+    "typescript": "^3.0.3"
   }
 }
