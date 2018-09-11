@@ -4,7 +4,8 @@
   "description": "A tiny wrapper for Node.js worker_threads lib",
   "main": "src/job.js",
   "scripts": {
-    "test": "node --experimental-worker node_modules/.bin/_mocha ./test",
+    "build": "tsc",
+    "test": "node --experimental-worker node_modules/.bin/_mocha -r ts-node/register ./test/**/*.ts",
     "docs": "gitbook build . docs",
     "serve-docs": "gitbook serve",
     "lint": "eslint src/job.js"
@@ -28,6 +29,8 @@
   },
   "homepage": "https://github.com/wilk/microjob#readme",
   "devDependencies": {
+    "@types/chai": "^4.1.4",
+    "@types/mocha": "^5.2.5",
     "@types/node": "^10.9.4",
     "chai": "^4.1.2",
     "eslint": "^5.5.0",
@@ -35,6 +38,7 @@
     "eslint-plugin-import": "^2.14.0",
     "gitbook-cli": "^2.3.2",
     "mocha": "^5.2.0",
+    "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
     "typescript": "^3.0.3"
   }
