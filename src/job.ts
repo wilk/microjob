@@ -36,8 +36,10 @@ workerPool.on('tick', ({ work, worker }: {work: Task, worker: Worker}) => {
     `
 
     // serialization precheck, due to this issue: https://github.com/nodejs/node/issues/22736
+    // @ts-ignore
     v8.serialize(config.data)
 
+    // @ts-ignore
     worker.once('message', (message: any) => {
       workerPool.free(worker)
 
@@ -48,6 +50,7 @@ workerPool.on('tick', ({ work, worker }: {work: Task, worker: Worker}) => {
       reject(error)
     })
 
+    // @ts-ignore
     worker.once('error', (error: Error) => {
       workerPool.free(worker)
       reject(error)
@@ -60,7 +63,7 @@ workerPool.on('tick', ({ work, worker }: {work: Task, worker: Worker}) => {
   }
 })
 
-function job(handler: Function, config: Config = { ctx: {}, data: {} }) {
+export function job(handler: Function, config: Config = { ctx: {}, data: {} }) {
   return new Promise((resolve, reject) => {
     if (typeof handler !== 'function') return reject(new Error(MISSING_HANDLER_ERROR))
 
@@ -73,8 +76,6 @@ function job(handler: Function, config: Config = { ctx: {}, data: {} }) {
   })
 }
 
-function stop() {
+export function stop() {
   workerPool.teardown()
 }
-
-export default { job, stop }

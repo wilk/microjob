@@ -1,4 +1,5 @@
 import { WorkerResponse } from './interfaces'
+// @ts-ignore
 import { parentPort } from 'worker_threads'
 
 parentPort.on('message', async (worker: string) => {
@@ -10,6 +11,7 @@ parentPort.on('message', async (worker: string) => {
   try {
     eval(worker)
     // __executor__ is defined in worker
+    // @ts-ignore
     response.data = await __executor__()
     parentPort.postMessage(response)
   } catch (err) {

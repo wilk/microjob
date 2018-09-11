@@ -1,3 +1,4 @@
+// @ts-ignore
 import { Worker } from 'worker_threads'
 import os from 'os'
 import EventEmitter from 'events'
@@ -14,7 +15,7 @@ class WorkerPool extends EventEmitter {
     super()
 
     for (let i = 0; i < maxWorkers; i++) {
-      const worker = new Worker('./src/worker.js')
+      const worker = new Worker('./worker.js')
 
       worker.once('online', () => {
         // next tick, so the worker js gets interpreted
@@ -65,9 +66,11 @@ class WorkerPool extends EventEmitter {
 
   free(worker: any): void {
     for (let i = 0; i < this.workers.length; i++) {
+      // @ts-ignore
       if (worker.threadId === this.workers[i].worker.threadId) {
         this.workers[i].status = WORKER_STATE_READY
         // remove previous listeners
+        // @ts-ignore
         this.workers[i].worker.removeAllListeners()
         this.tick()
         break
