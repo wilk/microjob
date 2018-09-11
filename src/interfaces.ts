@@ -1,6 +1,6 @@
 export interface Config {
-  ctx: any
-  data: any
+  ctx?: any
+  data?: any
 }
 
 export interface Task {
