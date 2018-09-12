@@ -22,7 +22,7 @@ $ npm install --save microjob
 ## Quick Example
 ```js
 (async () => {
-  const { job } = require('microjob')
+  const { job, stop } = require('microjob')
 
   try {
     // this function will be executed in another thread
@@ -39,6 +39,9 @@ $ npm install --save microjob
   } catch (err) {
     console.error(err)
   }
+
+  // graceful shutdown
+  stop()
 })()
 ```
 
