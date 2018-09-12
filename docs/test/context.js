@@ -12,14 +12,16 @@ describe('Job Context Testing', () => {
       numb: 10,
       bool: true,
       obj: {
-        nested: 'deep'
+        nested: 'deep'/*,
+        date: new Date()*/
       },
+      //date: new Date(),
       arr: [10, 20, 'meh'],
       myClass: class Foo {constructor() { console.log('hello from constructor') }}
     }
 
     try {
-      res = await job(() => ({ hello, numb, bool, obj, arr }), { ctx })
+      res = await job(() => ({ hello, numb, bool, obj, arr/*, date*/ }), { ctx })
     } catch (err) {
       error = err
     }
