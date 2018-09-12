@@ -13,7 +13,7 @@ class WorkerPool extends EventEmitter {
     this.workers = []
 
     for (let i = 0; i < maxWorkers; i++) {
-      const worker = new Worker('./src/worker.js')
+      const worker = new Worker(`${__dirname}/worker.js`)
 
       worker.once('online', () => {
         // next tick, so the worker js gets interpreted
