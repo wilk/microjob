@@ -50,6 +50,32 @@ describe('Job Data Testing', () => {
     assert.deepEqual(res, data)
   })
 
+  it('should execute a an inline job with a nested data', async () => {
+    let error
+    let res
+
+    const data = {
+      a: {
+        complex: {
+          json: {
+            with: {
+              date: new Date()
+            }
+          }
+        }
+      }
+    }
+
+    try {
+      res = await job(dat => dat, { data })
+    } catch (err) {
+      error = err
+    }
+
+    assert.isUndefined(error)
+    assert.deepEqual(res, data)
+  })
+
   after(() => {
     stop()
   })
