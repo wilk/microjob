@@ -34,6 +34,22 @@ describe('Job Data Testing', () => {
     assert.isUndefined(res)
   })
 
+  it('should execute a an inline job with a date inside data', async () => {
+    let error
+    let res
+
+    const data = { date: new Date() }
+
+    try {
+      res = await job(dat => dat, { data })
+    } catch (err) {
+      error = err
+    }
+
+    assert.isUndefined(error)
+    assert.deepEqual(res, data)
+  })
+
   after(() => {
     stop()
   })
