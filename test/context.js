@@ -6,6 +6,8 @@ describe('Job Context Testing', () => {
     let error
     let res
 
+    class Foo {}
+
     const ctx = {
       hello: 'world',
       fun: () => console.log('hello world!'),
@@ -17,7 +19,8 @@ describe('Job Context Testing', () => {
       },
       //date: new Date(),
       arr: [10, 20, 'meh'],
-      myClass: class Foo {constructor() { console.log('hello from constructor') }}
+      myClass: Foo,
+      myInstance: new Foo()
     }
 
     try {
