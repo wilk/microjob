@@ -2,11 +2,20 @@ const { assert } = require('chai')
 const { job, stop } = require('../src/job')
 
 describe('Job Data Testing', () => {
-  it('should execute a an inline job with custom data', async () => {
+  it('should execute an inline job with custom data', async () => {
     let error
     let res
 
-    const data = { hello: 'world' }
+    class MyClass {}
+
+    const data = {
+      hello: 'world',
+      numb: 1000,
+      float: 100.50,
+      bool: true,
+      arr: [10, 20, 'str', { either: 'obj' }],
+      myInstance: new MyClass()
+    }
 
     try {
       res = await job(dat => dat, { data })
@@ -18,7 +27,7 @@ describe('Job Data Testing', () => {
     assert.deepEqual(res, data)
   })
 
-  it('should throw a serialization error for wrong data', async () => {
+  it('should throw a serialization error when passing a function', async () => {
     let error
     let res
 
@@ -34,7 +43,23 @@ describe('Job Data Testing', () => {
     assert.isUndefined(res)
   })
 
-  it('should execute a an inline job with a date inside data', async () => {
+  it('should throw a serialization error when passing a class', async () => {
+    let error
+    let res
+
+    try {
+      res = await job(data => console.log(data.myClass), { data: { myClass: class {} } })
+    } catch (err) {
+      error = err
+    }
+
+    assert.exists(error)
+    assert.equal(error.message, "class {} could not be cloned.")
+    assert.isString(error.stack)
+    assert.isUndefined(res)
+  })
+
+  it('should execute an inline job with a date inside data', async () => {
     let error
     let res
 
@@ -50,7 +75,7 @@ describe('Job Data Testing', () => {
     assert.deepEqual(res, data)
   })
 
-  it('should execute a an inline job with a nested data', async () => {
+  it('should execute an inline job with a nested data', async () => {
     let error
     let res
 
