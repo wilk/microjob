@@ -12,6 +12,8 @@ Quoting the documentation:
 
 **Microjob** can be used only with **Node.js 10.5+** and with the **--experimental-worker** flag activated, otherwise it won't work.
 
+More details explained in: **[Microjob: a tiny multithreading library for Node.js](https://hackernoon.com/microjob-a-tiny-multithreading-library-for-node-js-92d0500b07d5)**
+
 ## Installation
 Via **npm**:
 
