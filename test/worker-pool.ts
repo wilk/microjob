@@ -1,5 +1,6 @@
+import helper from './helper'
 import { assert } from 'chai'
-import { job, stop } from '../src/job'
+import { job } from '../src/job'
 
 describe('Worker Pool Testing', () => {
   it('should execute at most 4 jobs at a time', async () => {
@@ -18,9 +19,5 @@ describe('Worker Pool Testing', () => {
 
     assert.isUndefined(error)
     assert.isAbove(diff, 10 * 2)
-  })
-
-  after(() => {
-    stop()
   })
 })

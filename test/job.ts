@@ -1,5 +1,6 @@
+import helper from './helper'
 import { assert } from 'chai'
-import { job, stop } from '../src/job'
+import { job } from '../src/job'
 
 describe('Job Testing', () => {
   it('should execute an empty inline job', async () => {
@@ -89,9 +90,5 @@ describe('Job Testing', () => {
     assert.equal(error.message, `job needs a function.\nTry with:\n> job(() => {...}, config)`)
     assert.isString(error.stack)
     assert.isUndefined(res)
-  })
-
-  after(() => {
-    stop()
   })
 })

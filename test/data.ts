@@ -1,5 +1,6 @@
+import helper from './helper'
 import { assert } from 'chai'
-import { job, stop } from '../src/job'
+import { job } from '../src/job'
 
 describe('Job Data Testing', () => {
   it('should execute a an inline job with custom data', async () => {
@@ -32,9 +33,5 @@ describe('Job Data Testing', () => {
     assert.equal(error.message, "() => console.log('hello there') could not be cloned.")
     assert.isString(error.stack)
     assert.isUndefined(res)
-  })
-
-  after(() => {
-    stop()
   })
 })
