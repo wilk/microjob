@@ -7,41 +7,14 @@ import { Task, WorkerWrapper } from './interfaces'
 const WORKER_STATE_READY = 'ready'
 const WORKER_STATE_BUSY = 'busy'
 
-const WORKER_POOL_STATE_ON = 'on'
-const WORKER_POOL_STATE_OFF = 'off'
-
 class WorkerPool extends EventEmitter {
   taskQueue: Task[] = []
   workers: WorkerWrapper[] = []
-  state = WORKER_POOL_STATE_OFF
 
-  constructor(maxWorkers: number) {
+  constructor(private maxWorkers: number) {
     super()
-    console.log('STARTING WORKER-POOL')
 
-    for (let i = 0; i < maxWorkers; i++) {
-      const worker = new Worker(`${__dirname}/worker.js`)
-
-      worker.once('online', () => {
-        // next tick, so the worker js gets interpreted
-        process.nextTick(() => {
-          this.workers.push({
-            status: WORKER_STATE_READY,
-            worker
-          })
-
-          // remove previous listeners, like the startup error handler
-          worker.removeAllListeners()
-
-          this.tick()
-        })
-      })
-
-      // startup error handler: should not be thrown or at least handled
-      worker.once('error', (error: Error) => {
-        throw error
-      })
-    }
+    this.setup()
   }
 
   tick(): void {
@@ -83,12 +56,38 @@ class WorkerPool extends EventEmitter {
     }
   }
 
+  setup(): void {
+    for (let i = 0; i < this.maxWorkers; i++) {
+      const worker = new Worker(`${__dirname}/worker.js`)
+
+      worker.once('online', () => {
+        // next tick, so the worker js gets interpreted
+        process.nextTick(() => {
+          this.workers.push({
+            status: WORKER_STATE_READY,
+            worker
+          })
+
+          // remove previous listeners, like the startup error handler
+          worker.removeAllListeners()
+
+          this.tick()
+        })
+      })
+
+      // startup error handler: should not be thrown or at least handled
+      worker.once('error', (error: Error) => {
+        throw error
+      })
+    }
+  }
+
   teardown(): void {
-    console.log('TEARING DOWN')
     for (let i = 0; i < this.workers.length; i++) {
       this.workers[i].worker.terminate()
-      this.workers.splice(i)
     }
+
+    this.workers = []
   }
 }
 
