@@ -91,4 +91,20 @@ describe('Job Testing', () => {
     assert.isString(error.stack)
     assert.isUndefined(res)
   })
+  
+  it('should throw a serialization error when a class is given back to main thread', async () => {
+    let error
+    let res
+
+    try {
+      res = await job(() => class Person {})
+    } catch (err) {
+      error = err
+    }
+
+    assert.exists(error)
+    assert.equal(error.message, "class Person {\n            } could not be cloned.")
+    assert.isString(error.stack)
+    assert.isUndefined(res)
+  })
 })

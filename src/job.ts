@@ -27,17 +27,19 @@ workerPool.on('tick', ({ work, worker }: {work: Task, worker: Worker}) => {
       variables += `let ${key} = ${variable}\n`
     }
 
-    const dataStr = JSON.stringify(config.data)
+    // @ts-ignore
+    const dataSerialized = v8.serialize(config.data)
+    const dataStr = JSON.stringify(dataSerialized)
     const workerStr = `
     async function __executor__() {
+      const v8 = require('v8')
       ${variables}
-      return await (${handler.toString()})(JSON.parse('${dataStr}'))
+      const dataParsed = JSON.parse('${dataStr}')
+      const dataBuffer = Buffer.from(dataParsed.data)
+      const dataDeserialized = v8.deserialize(dataBuffer)
+      return await (${handler.toString()})(dataDeserialized)
     }
     `
-
-    // serialization precheck, due to this issue: https://github.com/nodejs/node/issues/22736
-    // @ts-ignore
-    v8.serialize(config.data)
 
     // @ts-ignore
     worker.once('message', (message: any) => {
