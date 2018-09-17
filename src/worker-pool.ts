@@ -7,9 +7,13 @@ import { Task, WorkerWrapper } from './interfaces'
 const WORKER_STATE_READY = 'ready'
 const WORKER_STATE_BUSY = 'busy'
 
+const WORKER_POOL_STATE_ON = 'on'
+const WORKER_POOL_STATE_OFF = 'off'
+
 class WorkerPool extends EventEmitter {
-  taskQueue: Task[] = []
-  workers: WorkerWrapper[] = []
+  private taskQueue: Task[] = []
+  private workers: WorkerWrapper[] = []
+  private state = WORKER_POOL_STATE_ON
 
   constructor(private maxWorkers: number) {
     super()
@@ -20,7 +24,7 @@ class WorkerPool extends EventEmitter {
   tick(): void {
     if (this.taskQueue.length === 0) return
 
-    let availableWorker = null
+    let availableWorker: WorkerWrapper
     for (let i = 0; i < this.workers.length; i++) {
       if (this.workers[i].status === WORKER_STATE_READY) {
         availableWorker = this.workers[i]
@@ -28,7 +32,7 @@ class WorkerPool extends EventEmitter {
       }
     }
 
-    if (availableWorker === null) return
+    if (typeof availableWorker === 'undefined') return
 
     const work = this.taskQueue.shift()
 
@@ -71,6 +75,9 @@ class WorkerPool extends EventEmitter {
           // remove previous listeners, like the startup error handler
           worker.removeAllListeners()
 
+          // if teardown has been called during the setup procedure, repeat it to flush the worker buffer
+          if (this.state === WORKER_POOL_STATE_OFF) return this.teardown()
+
           this.tick()
         })
       })
@@ -84,9 +91,11 @@ class WorkerPool extends EventEmitter {
 
   teardown(): void {
     for (let i = 0; i < this.workers.length; i++) {
+      // @ts-ignore
       this.workers[i].worker.terminate()
     }
 
+    this.state = WORKER_POOL_STATE_OFF
     this.workers = []
   }
 }
