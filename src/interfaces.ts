@@ -1,6 +1,6 @@
-export interface Config {
-  ctx?: any
-  data?: any
+export interface Config<T = {}, U = {}> {
+  ctx?: T;
+  data?: U;
 }
 
 export interface Task {
