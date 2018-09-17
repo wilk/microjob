@@ -1,13 +1,19 @@
 {
   "name": "microjob",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "description": "A tiny wrapper for Node.js worker_threads lib",
-  "main": "src/job.js",
+  "main": "dist/job.js",
+  "types": "./index.d.ts",
   "scripts": {
-    "test": "node --experimental-worker node_modules/.bin/_mocha ./test",
+    "build": "npm run clean; tsc; npm run copy-assets",
+    "copy-assets": "cp src/worker.js dist",
+    "clean": "rm -rf dist",
+    "test": "node --experimental-worker node_modules/.bin/_mocha -r ts-node/register ./test/**/*.ts",
+    "test-watch": "node --experimental-worker node_modules/.bin/_mocha --watch-extensions ts -r ts-node/register ./test/**/*.ts --watch -R min",
     "docs": "gitbook build . docs",
     "serve-docs": "gitbook serve",
-    "lint": "eslint src/job.js"
+    "lint": "tslint src/**/*.ts",
+    "release": "npm run lint; npm test; npm run build; npm run docs"
   },
   "engines": {
     "node": ">=10.5.0",
@@ -28,11 +34,14 @@
   },
   "homepage": "https://github.com/wilk/microjob#readme",
   "devDependencies": {
+    "@types/chai": "^4.1.4",
+    "@types/mocha": "^5.2.5",
+    "@types/node": "^10.9.4",
     "chai": "^4.1.2",
-    "eslint": "^5.5.0",
-    "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.14.0",
     "gitbook-cli": "^2.3.2",
-    "mocha": "^5.2.0"
+    "mocha": "^5.2.0",
+    "ts-node": "^7.0.1",
+    "tslint": "^5.11.0",
+    "typescript": "^3.0.3"
   }
 }
