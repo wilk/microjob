@@ -1,9 +1,11 @@
 docs
 node_modules
 test
-.eslintrc.js
 SUMMARY.md
 API.md
+GUIDE.md
 _book
 public
-dist
+src
+tsconfig.json
+tslint.json

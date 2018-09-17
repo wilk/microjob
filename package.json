@@ -13,7 +13,7 @@
     "docs": "gitbook build . docs",
     "serve-docs": "gitbook serve",
     "lint": "tslint src/**/*.ts",
-    "release": "npm run lint; npm test; npm run build; npm run docs"
+    "prerelease": "npm run lint; npm test; npm run build; npm run docs"
   },
   "engines": {
     "node": ">=10.5.0",
