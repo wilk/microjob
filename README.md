@@ -48,7 +48,7 @@ $ npm install --save microjob
 ```
 
 ## Documentation
-Dive deep into the documentation to find more examples: **[API](API.md)**
+Dive deep into the documentation to find more examples: **[Guide](GUIDE.md)**
 
 ## Known Issues
 * **[sanitize worker context](API.md#job-context)**

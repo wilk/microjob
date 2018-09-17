@@ -1,5 +1,6 @@
-const { assert } = require('chai')
-const { job, stop } = require('../src/job')
+import helper from './helper'
+import { assert } from 'chai'
+import { job } from '../src/job'
 
 describe('Job Testing', () => {
   it('should execute an empty inline job', async () => {
@@ -79,6 +80,7 @@ describe('Job Testing', () => {
     let res
 
     try {
+      // @ts-ignore
       res = await job('./worker.js')
     } catch (err) {
       error = err
@@ -89,7 +91,7 @@ describe('Job Testing', () => {
     assert.isString(error.stack)
     assert.isUndefined(res)
   })
-
+  
   it('should throw a serialization error when a class is given back to main thread', async () => {
     let error
     let res
@@ -101,12 +103,8 @@ describe('Job Testing', () => {
     }
 
     assert.exists(error)
-    assert.equal(error.message, "class Person {} could not be cloned.")
+    assert.equal(error.message, "class Person {\n            } could not be cloned.")
     assert.isString(error.stack)
     assert.isUndefined(res)
-  })
-
-  after(() => {
-    stop()
   })
 })

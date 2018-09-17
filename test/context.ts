@@ -1,5 +1,6 @@
-const { assert } = require('chai')
-const { job, stop } = require('../src/job')
+import helper from './helper'
+import { assert } from 'chai'
+import { job } from '../src/job'
 
 describe('Job Context Testing', () => {
   it('should execute a an inline job with custom context', async () => {
@@ -24,6 +25,7 @@ describe('Job Context Testing', () => {
     }
 
     try {
+      // @ts-ignore
       res = await job(() => ({ hello, numb, bool, obj, arr/*, date*/ }), { ctx })
     } catch (err) {
       error = err
@@ -31,9 +33,5 @@ describe('Job Context Testing', () => {
 
     assert.isUndefined(error)
     assert.deepEqual(res, { hello: ctx.hello, numb: ctx.numb, bool: ctx.bool, obj: ctx.obj, arr: ctx.arr })
-  })
-
-  after(() => {
-    stop()
   })
 })

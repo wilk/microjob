@@ -2,7 +2,7 @@ const { parentPort } = require('worker_threads')
 
 parentPort.on('message', async worker => {
   const response = {
-    err: null,
+    error: null,
     data: null
   }
 

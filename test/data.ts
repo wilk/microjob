@@ -1,8 +1,9 @@
-const { assert } = require('chai')
-const { job, stop } = require('../src/job')
+import helper from './helper'
+import { assert } from 'chai'
+import { job } from '../src/job'
 
 describe('Job Data Testing', () => {
-  it('should execute an inline job with custom data', async () => {
+  it('should execute a an inline job with custom data', async () => {
     let error
     let res
 
@@ -26,7 +27,7 @@ describe('Job Data Testing', () => {
     assert.isUndefined(error)
     assert.deepEqual(res, data)
   })
-
+  
   it('should throw a serialization error when passing a function', async () => {
     let error
     let res
@@ -54,7 +55,7 @@ describe('Job Data Testing', () => {
     }
 
     assert.exists(error)
-    assert.equal(error.message, "class {} could not be cloned.")
+    assert.equal(error.message, "class {\n                    } could not be cloned.")
     assert.isString(error.stack)
     assert.isUndefined(res)
   })
@@ -99,9 +100,5 @@ describe('Job Data Testing', () => {
 
     assert.isUndefined(error)
     assert.deepEqual(res, data)
-  })
-
-  after(() => {
-    stop()
   })
 })
