@@ -8,6 +8,7 @@
     "build": "npm run clean; tsc; npm run copy-assets",
     "copy-assets": "cp src/worker.js dist; cp index.d.ts dist",
     "clean": "rm -rf dist",
+    "pretest": "npm run lint",
     "test": "node --experimental-worker node_modules/.bin/_mocha -r ts-node/register ./test/**/*.ts",
     "test-watch": "node --experimental-worker node_modules/.bin/_mocha --watch-extensions ts -r ts-node/register ./test/**/*.ts --watch -R min",
     "docs": "gitbook build . docs",
