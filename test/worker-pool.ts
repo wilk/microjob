@@ -7,7 +7,7 @@ describe('Worker Pool Testing', () => {
     let error
     let diff
 
-    const task = () => new Promise(resolve => setTimeout(() => resolve(), 10))
+    const task = () => new Promise(resolve => setTimeout(() => resolve(), 20))
 
     try {
       const start = Date.now()
@@ -18,6 +18,6 @@ describe('Worker Pool Testing', () => {
     }
 
     assert.isUndefined(error)
-    assert.isAbove(diff, 10 * 2)
+    assert.isAbove(diff, 40)
   })
 })
