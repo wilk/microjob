@@ -9,3 +9,4 @@ public
 src
 tsconfig.json
 tslint.json
+.travis.yml
