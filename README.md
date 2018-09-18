@@ -1,4 +1,6 @@
 # Microjob
+[![Build Status](https://travis-ci.org/wilk/microjob.svg?branch=master)](https://travis-ci.org/wilk/microjob)
+
 A tiny wrapper for turning [Node.js threads](https://nodejs.org/api/worker_threads.html) in easy-to-use routines for CPU-bound.
 
 ![When my multithreaded program works like a charm](https://ljdchost.com/K074MgM.gif)
