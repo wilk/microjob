@@ -1,6 +1,6 @@
 docs
 node_modules
-test
+__tests__
 SUMMARY.md
 API.md
 GUIDE.md
@@ -10,3 +10,4 @@ src
 tsconfig.json
 tslint.json
 .travis.yml
+coverage
