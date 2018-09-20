@@ -1,0 +1,17 @@
+src
+__tests__
+index.d.ts
+.git
+.npmignore
+.travis.yml
+coverage
+dist
+_book
+docs
+node_modules
+package.json
+package-lock.json
+public
+tsconfig.json
+tslint.json
+.bookignore
