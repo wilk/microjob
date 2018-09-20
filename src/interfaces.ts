@@ -1,6 +1,6 @@
-export interface Config {
-  ctx?: any
-  data?: any
+export interface Config<T = {}, U = {}> {
+  ctx?: T
+  data?: U
 }
 
 export interface Task {
@@ -15,10 +15,10 @@ export interface WorkerWrapper {
   worker: Worker
 }
 
-export interface WorkerResponse {
+export interface WorkerResponse<T = {}> {
   error: {
     message: string,
     stack: string
   }
-  data: any
+  data: T
 }
