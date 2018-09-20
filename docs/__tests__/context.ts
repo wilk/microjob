@@ -1,6 +1,6 @@
-import helper from './helper'
-import { assert } from 'chai'
-import { job } from '../src/job'
+import { job, stop } from '../src/job'
+
+afterAll(() => stop())
 
 describe('Job Context Testing', () => {
   it('should execute a an inline job with custom context', async () => {
@@ -31,7 +31,7 @@ describe('Job Context Testing', () => {
       error = err
     }
 
-    assert.isUndefined(error)
-    assert.deepEqual(res, { hello: ctx.hello, numb: ctx.numb, bool: ctx.bool, obj: ctx.obj, arr: ctx.arr })
+    expect(error).toBeUndefined()
+    expect(res).toEqual({ hello: ctx.hello, numb: ctx.numb, bool: ctx.bool, obj: ctx.obj, arr: ctx.arr })
   })
 })

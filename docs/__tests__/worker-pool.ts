@@ -1,5 +1,3 @@
-import helper from './helper'
-import { assert } from 'chai'
 import { job } from '../src/job'
 
 describe('Worker Pool Testing', () => {
@@ -18,7 +16,7 @@ describe('Worker Pool Testing', () => {
       error = err
     }
 
-    assert.isUndefined(error)
-    assert.isAbove(diff, 40)
+    expect(error).toBeUndefined()
+    expect(diff).toBeGreaterThan(40)
   })
 })

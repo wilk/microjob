@@ -1,6 +1,6 @@
-import helper from './helper'
-import { assert } from 'chai'
-import { job } from '../src/job'
+import { job, stop } from '../src/job'
+
+afterAll(() => stop())
 
 describe('Job Testing', () => {
   it('should execute an empty inline job', async () => {
@@ -18,8 +18,8 @@ describe('Job Testing', () => {
       error = err
     }
 
-    assert.isUndefined(error)
-    assert.equal(res, 1000000)
+    expect(error).toBeUndefined()
+    expect(res).toBe(1000000)
   })
 
   it('should execute a list of inline jobs', async () => {
@@ -39,8 +39,8 @@ describe('Job Testing', () => {
       error = err
     }
 
-    assert.isUndefined(error)
-    assert.deepEqual(results, [1000000, 1000000, 1000000])
+    expect(error).toBeUndefined()
+    expect(results).toEqual([1000000, 1000000, 1000000])
   })
 
   it('should not return a function', async () => {
@@ -53,10 +53,10 @@ describe('Job Testing', () => {
       error = err
     }
 
-    assert.isNotNull(error)
-    assert.equal(error.message, "() => console.log('hello there') could not be cloned.")
-    assert.isString(error.stack)
-    assert.isUndefined(res)
+    expect(error).toBeDefined()
+    expect(error.message).toEqual("() => console.log('hello there') could not be cloned.")
+    expect(typeof error.stack).toBe('string')
+    expect(res).toBeUndefined()
   })
 
   it('should catch job errors', async () => {
@@ -69,10 +69,10 @@ describe('Job Testing', () => {
       error = err
     }
 
-    assert.exists(error)
-    assert.equal(error.message, 'an exception')
-    assert.isString(error.stack)
-    assert.isUndefined(res)
+    expect(error).toBeDefined()
+    expect(error.message).toEqual("an exception")
+    expect(typeof error.stack).toBe('string')
+    expect(res).toBeUndefined()
   })
 
   it('should throw an error if the worker is not a function', async () => {
@@ -86,10 +86,10 @@ describe('Job Testing', () => {
       error = err
     }
 
-    assert.exists(error)
-    assert.equal(error.message, `job needs a function.\nTry with:\n> job(() => {...}, config)`)
-    assert.isString(error.stack)
-    assert.isUndefined(res)
+    expect(error).toBeDefined()
+    expect(error.message).toEqual(`job needs a function.\nTry with:\n> job(() => {...}, config)`)
+    expect(typeof error.stack).toBe('string')
+    expect(res).toBeUndefined()
   })
   
   it('should throw a serialization error when a class is given back to main thread', async () => {
@@ -102,9 +102,9 @@ describe('Job Testing', () => {
       error = err
     }
 
-    assert.exists(error)
-    assert.equal(error.message, "class Person {\n            } could not be cloned.")
-    assert.isString(error.stack)
-    assert.isUndefined(res)
+    expect(error).toBeDefined()
+    expect(error.message).toEqual("class Person {\n            } could not be cloned.")
+    expect(typeof error.stack).toBe('string')
+    expect(res).toBeUndefined()
   })
 })

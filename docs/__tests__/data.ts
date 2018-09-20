@@ -1,6 +1,6 @@
-import helper from './helper'
-import { assert } from 'chai'
-import { job } from '../src/job'
+import { job, stop } from '../src/job'
+
+afterAll(() => stop())
 
 describe('Job Data Testing', () => {
   it('should execute a an inline job with custom data', async () => {
@@ -24,8 +24,8 @@ describe('Job Data Testing', () => {
       error = err
     }
 
-    assert.isUndefined(error)
-    assert.deepEqual(res, data)
+    expect(error).toBeUndefined()
+    expect(res).toEqual(data)
   })
   
   it('should throw a serialization error when passing a function', async () => {
@@ -38,10 +38,10 @@ describe('Job Data Testing', () => {
       error = err
     }
 
-    assert.exists(error)
-    assert.equal(error.message, "() => console.log('hello there') could not be cloned.")
-    assert.isString(error.stack)
-    assert.isUndefined(res)
+    expect(error).toBeDefined()
+    expect(error.message).toEqual("() => console.log('hello there') could not be cloned.")
+    expect(typeof error.stack).toBe('string')
+    expect(res).toBeUndefined()
   })
 
   it('should throw a serialization error when passing a class', async () => {
@@ -54,10 +54,10 @@ describe('Job Data Testing', () => {
       error = err
     }
 
-    assert.exists(error)
-    assert.equal(error.message, "class {\n                    } could not be cloned.")
-    assert.isString(error.stack)
-    assert.isUndefined(res)
+    expect(error).toBeDefined()
+    expect(error.message).toEqual("class {\n                    } could not be cloned.")
+    expect(typeof error.stack).toBe('string')
+    expect(res).toBeUndefined()
   })
 
   it('should execute an inline job with a date inside data', async () => {
@@ -72,8 +72,8 @@ describe('Job Data Testing', () => {
       error = err
     }
 
-    assert.isUndefined(error)
-    assert.deepEqual(res, data)
+    expect(error).toBeUndefined()
+    expect(res).toEqual(data)
   })
 
   it('should execute an inline job with a nested data', async () => {
@@ -98,7 +98,7 @@ describe('Job Data Testing', () => {
       error = err
     }
 
-    assert.isUndefined(error)
-    assert.deepEqual(res, data)
+    expect(error).toBeUndefined()
+    expect(res).toEqual(data)
   })
 })
