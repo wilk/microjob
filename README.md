@@ -1,4 +1,5 @@
 # Microjob
+[![npm version](https://badge.fury.io/js/microjob.svg)](https://badge.fury.io/js/microjob)
 [![Build Status](https://travis-ci.org/wilk/microjob.svg?branch=master)](https://travis-ci.org/wilk/microjob)
 [![Coverage Status](https://coveralls.io/repos/github/wilk/microjob/badge.svg?branch=feature%2Fcoverage)](https://coveralls.io/github/wilk/microjob?branch=feature%2Fcoverage)
 
