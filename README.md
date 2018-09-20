@@ -1,5 +1,6 @@
 # Microjob
 [![Build Status](https://travis-ci.org/wilk/microjob.svg?branch=master)](https://travis-ci.org/wilk/microjob)
+[![Coverage Status](https://coveralls.io/repos/github/wilk/microjob/badge.svg?branch=feature%2Fcoverage)](https://coveralls.io/github/wilk/microjob?branch=feature%2Fcoverage)
 
 A tiny wrapper for turning [Node.js threads](https://nodejs.org/api/worker_threads.html) in easy-to-use routines for CPU-bound.
 
