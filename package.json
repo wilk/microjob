@@ -10,12 +10,11 @@
     "clean": "rm -rf dist",
     "pretest": "npm run lint",
     "test": "node --experimental-worker node_modules/.bin/jest",
-    "test-watch": "node --experimental-worker node_modules/.bin/_mocha --watch-extensions ts -r ts-node/register ./test/specs/**/*.ts --watch -R min",
+    "test-watch": "node --experimental-worker node_modules/.bin/jest --watchAll",
     "docs": "gitbook build . docs",
     "serve-docs": "gitbook serve",
     "lint": "tslint src/**/*.ts",
     "prerelease": "npm run lint; npm test; npm run build; npm run docs",
-    "coverage": "node --experimental-worker node_modules/.bin/jest --coverage",
     "report-coverage": "node --experimental-worker node_modules/.bin/jest --coverage && cat ./coverage/lcov.info | coveralls"
   },
   "engines": {
