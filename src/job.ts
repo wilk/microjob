@@ -81,3 +81,13 @@ export function job(handler: Function, config: Config = { ctx: {}, data: {} }) {
 export function stop() {
   workerPool.teardown()
 }
+
+export function thread(config: Config = { ctx: {}, data: {} }) {
+  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+    const originalMethod = descriptor.value
+    descriptor.value = async (...args) => job(async () => {
+      originalMethod.apply(this, args)
+    }, config)
+    return descriptor
+  }
+}
