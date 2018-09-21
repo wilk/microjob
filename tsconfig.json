@@ -5,6 +5,7 @@
     "target": "es6",
     "noImplicitAny": false,
     "moduleResolution": "node",
+    "experimentalDecorators": true,
     "sourceMap": false,
     "outDir": "dist",
     "baseUrl": ".",
