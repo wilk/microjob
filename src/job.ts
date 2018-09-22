@@ -82,12 +82,30 @@ export function stop() {
   workerPool.teardown()
 }
 
-export function thread(config: Config = { ctx: {}, data: {} }) {
+export function thread(ctx: any = {}) {
   return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+    console.log(descriptor.value)
+    console.log('executing decorator')
     const originalMethod = descriptor.value
-    descriptor.value = async (...args) => job(async () => {
-      originalMethod.apply(this, args)
-    }, config)
+    descriptor.value = async (...args) => {
+      console.log('executing method')
+      return job(data => {
+        console.log('executing job')
+        return originalMethod.apply(this, data), {ctx, data: {...args}}
+      }, {ctx, data: {...args}})
+    }
+    descriptor.value = async data => {
+      console.log('executing method')
+      console.log(descriptor)
+      console.log(target)
+      console.log(propertyKey)
+      return originalMethod.apply(target, [data])
+      /*return job(async data => {
+        console.log('executing method')
+        return originalMethod.apply(this, data), {ctx, data: {...args}}
+      })*/
+    }
+    console.log(descriptor.value)
     return descriptor
   }
 }
