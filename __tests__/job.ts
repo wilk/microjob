@@ -1,4 +1,4 @@
-import { job, stop } from '../src/job'
+import { job, stop, thread } from '../src/job'
 
 afterAll(() => stop())
 
@@ -106,5 +106,32 @@ describe('Job Testing', () => {
     expect(error.message).toEqual("class Person {\n            } could not be cloned.")
     expect(typeof error.stack).toBe('string')
     expect(res).toBeUndefined()
+  })
+  
+  it('should execute a method into a separated thread', async () => {
+    let error
+    let res
+    try {
+
+      class Person {
+        constructor(private name: string) {}
+
+        @thread()
+        hello(sentence: string): string {
+          console.log('FROM JOB')
+          console.log(this)
+          console.log(`hey from ${this.name}: ${sentence}`)
+          return 'wat'
+        }
+      }
+
+      const foo = new Person('foo')
+      res = await foo.hello('the sentence')
+    } catch (err) {
+      error = err
+    }
+
+    expect(error).toBeUndefined()
+    expect(res).toBe('wat')
   })
 })
