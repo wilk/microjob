@@ -2,7 +2,7 @@
 This documentation helps using `microjob` with ease, involving simple and quick examples.
 
 ## Worker Pool
-![Worker Pool](public/worker-pool.png "Worker Pool")
+![Worker Pool](https://upload.wikimedia.org/wikipedia/commons/0/0c/Thread_pool.svg "Worker Pool")
 
 [Image taken from Wikipedia](https://en.wikipedia.org/wiki/Thread_pool#/media/File:Thread_pool.svg)
 
