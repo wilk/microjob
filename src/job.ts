@@ -87,25 +87,24 @@ export function thread(ctx: any = {}) {
     console.log(descriptor.value)
     console.log('executing decorator')
     const originalMethod = descriptor.value
-    descriptor.value = async (...args) => {
+    /*descriptor.value = async (...args) => {
       console.log('executing method')
       return job(data => {
         console.log('executing job')
         return originalMethod.apply(this, data), {ctx, data: {...args}}
       }, {ctx, data: {...args}})
-    }
+    }*/
     descriptor.value = async data => {
       console.log('executing method')
       console.log(descriptor)
       console.log(target)
       console.log(propertyKey)
-      return originalMethod.apply(target, [data])
+      return originalMethod.apply(originalMethod, [data])
       /*return job(async data => {
         console.log('executing method')
         return originalMethod.apply(this, data), {ctx, data: {...args}}
       })*/
     }
-    console.log(descriptor.value)
     return descriptor
   }
 }
