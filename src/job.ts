@@ -11,6 +11,9 @@ workerPool.on('tick', ({ work, worker }: {work: Task, worker: Worker}) => {
   try {
     let variables = ''
     for (const key in config.ctx) {
+      console.log(key, config.ctx[key])
+      console.log(config.ctx.hasOwnProperty(key))
+      console.log(typeof config.ctx[key])
       if (!config.ctx.hasOwnProperty(key)) continue
 
       let variable
@@ -24,6 +27,7 @@ workerPool.on('tick', ({ work, worker }: {work: Task, worker: Worker}) => {
         default:
           variable = config.ctx[key]
       }
+      console.log(variable)
       variables += `let ${key} = ${variable}\n`
     }
 
@@ -40,6 +44,8 @@ workerPool.on('tick', ({ work, worker }: {work: Task, worker: Worker}) => {
       return await (${handler.toString()})(dataDeserialized)
     }
     `
+
+    console.log(workerStr)
 
     // @ts-ignore
     worker.once('message', (message: any) => {
@@ -87,24 +93,33 @@ export function thread(ctx: any = {}) {
     console.log(descriptor.value)
     console.log('executing decorator')
     const originalMethod = descriptor.value
-    /*descriptor.value = async (...args) => {
+    descriptor.value = async function (...args) {
+      const context = this
+      console.log(this.__proto__, this[propertyKey])
+      ctx.instance = Object.assign( Object.create( Object.getPrototypeOf(this)), this)
+      ctx.method = `function ${originalMethod.toString()}`
+      console.log(ctx)
       console.log('executing method')
       return job(data => {
         console.log('executing job')
-        return originalMethod.apply(this, data), {ctx, data: {...args}}
+        // @ts-ignore
+        console.log(instance, method)
+        // @ts-ignore
+        return method.apply(instance, data)
       }, {ctx, data: {...args}})
-    }*/
-    descriptor.value = async data => {
+    }
+    /*descriptor.value = async function (data) {
+      const context = this
       console.log('executing method')
       console.log(descriptor)
       console.log(target)
       console.log(propertyKey)
-      return originalMethod.apply(originalMethod, [data])
-      /*return job(async data => {
+      //return originalMethod.apply(context, [data])
+      return job(async data => {
         console.log('executing method')
-        return originalMethod.apply(this, data), {ctx, data: {...args}}
-      })*/
-    }
+        return originalMethod.apply(context, data), {ctx, data: {...args}}
+      })
+    }*/
     return descriptor
   }
 }
