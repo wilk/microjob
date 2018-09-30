@@ -6,7 +6,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "npm run clean; tsc; npm run copy-assets",
-    "copy-assets": "cp src/worker.js dist; cp index.d.ts dist",
+    "copy-assets": "cp src/worker.js dist; cp src/index.d.ts dist",
     "clean": "rm -rf dist",
     "pretest": "npm run lint",
     "test": "node --experimental-worker node_modules/.bin/jest",
