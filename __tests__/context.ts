@@ -2,7 +2,7 @@ import { job, stop } from '../src/job'
 
 afterAll(() => stop())
 
-describe('Job Context Testing', () => {
+xdescribe('Job Context Testing', () => {
   it('should execute a an inline job with custom context', async () => {
     let error
     let res

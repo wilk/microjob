@@ -3,7 +3,7 @@ import { job, stop, thread } from '../src/job'
 afterAll(() => stop())
 
 describe('Job Testing', () => {
-  it('should execute an empty inline job', async () => {
+  xit('should execute an empty inline job', async () => {
     let error
     let res
 
@@ -22,7 +22,7 @@ describe('Job Testing', () => {
     expect(res).toBe(1000000)
   })
 
-  it('should execute a list of inline jobs', async () => {
+  xit('should execute a list of inline jobs', async () => {
     let error
     let results
 
@@ -43,7 +43,7 @@ describe('Job Testing', () => {
     expect(results).toEqual([1000000, 1000000, 1000000])
   })
 
-  it('should not return a function', async () => {
+  xit('should not return a function', async () => {
     let error
     let res
 
@@ -59,7 +59,7 @@ describe('Job Testing', () => {
     expect(res).toBeUndefined()
   })
 
-  it('should catch job errors', async () => {
+  xit('should catch job errors', async () => {
     let error
     let res
 
@@ -75,7 +75,7 @@ describe('Job Testing', () => {
     expect(res).toBeUndefined()
   })
 
-  it('should throw an error if the worker is not a function', async () => {
+  xit('should throw an error if the worker is not a function', async () => {
     let error
     let res
 
@@ -92,7 +92,7 @@ describe('Job Testing', () => {
     expect(res).toBeUndefined()
   })
   
-  it('should throw a serialization error when a class is given back to main thread', async () => {
+  xit('should throw a serialization error when a class is given back to main thread', async () => {
     let error
     let res
 
@@ -111,15 +111,21 @@ describe('Job Testing', () => {
   it('should execute a method into a separated thread', async () => {
     let error
     let res
-    try {
 
+    try {
       class Person {
-        constructor(private name: string) {}
+        constructor(private name: string) {
+          console.log(`hey from ${this.name}`)
+        }
+
+        public meh = 'lel'
 
         @thread()
         hello(sentence: string): string {
           console.log('FROM JOB')
           console.log(this)
+          // @ts-ignore
+          console.log(this.meh)
           console.log(`hey from ${this.name}: ${sentence}`)
           return 'wat'
         }

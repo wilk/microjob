@@ -2,7 +2,7 @@ import { job, stop } from '../src/job'
 
 afterAll(() => stop())
 
-describe('Job Data Testing', () => {
+xdescribe('Job Data Testing', () => {
   it('should execute a an inline job with custom data', async () => {
     let error
     let res
