@@ -97,8 +97,9 @@ export function thread(ctx: any = {}) {
       const context = this
       console.log(this.__proto__, this[propertyKey])
       ctx.instance = Object.assign( Object.create( Object.getPrototypeOf(this)), this)
-      ctx.method = `function ${originalMethod.toString()}`
+      ctx.method = `{${originalMethod}}`
       console.log(ctx)
+      console.log(originalMethod)
       console.log('executing method')
       return job(data => {
         console.log('executing job')
