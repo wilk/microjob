@@ -89,7 +89,11 @@ export function stop() {
 }
 
 export function thread(ctx: any = {}) {
-  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+  return function (target: any, propertyKey?: string, descriptor?: PropertyDescriptor) {
+    if (propertyKey === undefined && descriptor === undefined) {
+      // @todo: treat it as a factory decorator (function decorator)
+    }
+    
     console.log(descriptor.value)
     console.log('executing decorator')
     const originalMethod = descriptor.value
