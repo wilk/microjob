@@ -127,7 +127,7 @@ Achieving the same result can be done by passing the context object:
 })()
 ```
 
-## Graceful shutdown
+## Force shutdown
 When you don't need microjob anymore, you can shut it down with the `stop` function:
 
 ```js
