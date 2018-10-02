@@ -13,7 +13,7 @@
     "test-watch": "node --experimental-worker node_modules/.bin/jest --watchAll",
     "docs": "gitbook build . docs",
     "serve-docs": "gitbook serve",
-    "lint": "tslint src/**/*.ts",
+    "lint": "tslint src/**/*.ts __tests__/**/*.ts",
     "prerelease": "npm run lint; npm test; npm run build; npm run docs",
     "report-coverage": "node --experimental-worker node_modules/.bin/jest --coverage && cat ./coverage/lcov.info | coveralls"
   },
