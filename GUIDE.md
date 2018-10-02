@@ -127,7 +127,7 @@ Achieving the same result can be done by passing the context object:
 })()
 ```
 
-## Graceful shutdown
+## Forceful shutdown
 When you don't need microjob anymore, you can shut it down with the `stop` function:
 
 ```js
@@ -153,4 +153,4 @@ When you don't need microjob anymore, you can shut it down with the `stop` funct
 })()
 ```
 
-`stop` ensures that every worker of the worker pool is terminated.
+`stop` ensures that every worker of the worker pool is [terminated](https://nodejs.org/api/worker_threads.html#worker_threads_worker_terminate_callback).

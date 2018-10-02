@@ -70,7 +70,7 @@ describe('Job Testing', () => {
     }
 
     expect(error).toBeDefined()
-    expect(error.message).toEqual("an exception")
+    expect(error.message).toEqual('an exception')
     expect(typeof error.stack).toBe('string')
     expect(res).toBeUndefined()
   })
@@ -103,7 +103,7 @@ describe('Job Testing', () => {
     }
 
     expect(error).toBeDefined()
-    expect(error.message).toEqual("class Person {\n            } could not be cloned.")
+    expect(error.message).toEqual('class Person {\n            } could not be cloned.')
     expect(typeof error.stack).toBe('string')
     expect(res).toBeUndefined()
   })

@@ -18,7 +18,7 @@ xdescribe('Job Context Testing', () => {
         nested: 'deep'/*,
         date: new Date()*/
       },
-      //date: new Date(),
+      // date: new Date(),
       arr: [10, 20, 'meh'],
       myClass: Foo,
       myInstance: new Foo()
