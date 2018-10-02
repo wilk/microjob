@@ -11,7 +11,7 @@ const {job} = require('microjob')
 It's a function with this signature:
 
 ```ts
-function job(handler: Function, config?: Config): Promise<any>
+function job<T>(handler: <T>(data?: any) => T, config?: Config): Promise<T>
 ```
 
 **Config** is defined as an object:
