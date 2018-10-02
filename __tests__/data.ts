@@ -27,7 +27,7 @@ describe('Job Data Testing', () => {
     expect(error).toBeUndefined()
     expect(res).toEqual(data)
   })
-  
+
   it('should throw a serialization error when passing a function', async () => {
     let error
     let res
@@ -55,7 +55,7 @@ describe('Job Data Testing', () => {
     }
 
     expect(error).toBeDefined()
-    expect(error.message).toEqual("class {\n                    } could not be cloned.")
+    expect(error.message).toEqual('class {\n                    } could not be cloned.')
     expect(typeof error.stack).toBe('string')
     expect(res).toBeUndefined()
   })
