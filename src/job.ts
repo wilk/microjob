@@ -65,7 +65,7 @@ workerPool.on('tick', ({ work, worker }: {work: Task, worker: Worker}) => {
   }
 })
 
-export function job<T>(handler: <T>(data?: any) => T, config: Config = { ctx: {}, data: {} }): Promise<T> {
+export function job<T>(handler: <T>(data?: any) => void, config: Config = { ctx: {}, data: {} }): Promise<T> {
   return new Promise((resolve, reject) => {
     if (typeof handler !== 'function') return reject(new Error(MISSING_HANDLER_ERROR))
 
