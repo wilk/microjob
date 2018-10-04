@@ -91,7 +91,7 @@ describe('Job Testing', () => {
     expect(typeof error.stack).toBe('string')
     expect(res).toBeUndefined()
   })
-  
+
   xit('should throw a serialization error when a class is given back to main thread', async () => {
     let error
     let res
@@ -107,7 +107,7 @@ describe('Job Testing', () => {
     expect(typeof error.stack).toBe('string')
     expect(res).toBeUndefined()
   })
-  
+
   it('should execute a method into a separated thread', async () => {
     let error
     let res
