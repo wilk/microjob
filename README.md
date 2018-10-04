@@ -2,6 +2,7 @@
 [![npm version](https://badge.fury.io/js/microjob.svg)](https://badge.fury.io/js/microjob)
 [![Build Status](https://travis-ci.org/wilk/microjob.svg?branch=master)](https://travis-ci.org/wilk/microjob)
 [![Coverage Status](https://coveralls.io/repos/github/wilk/microjob/badge.svg?branch=feature%2Fcoverage)](https://coveralls.io/github/wilk/microjob?branch=feature%2Fcoverage)
+[![Dependencies](https://img.shields.io/david/wilk/microjob.svg)](https://david-dm.org/wilk/microjob?path=packages/microjob)
 
 A tiny wrapper for turning [Node.js threads](https://nodejs.org/api/worker_threads.html) in easy-to-use routines for CPU-bound.
 
