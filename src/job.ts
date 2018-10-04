@@ -12,9 +12,6 @@ workerPool.on('tick', ({ work, worker }: {work: Task, worker: Worker}) => {
     let variables = ''
     for (const key in config.ctx) {
       console.log(key, config.ctx[key])
-      console.log(config.ctx.hasOwnProperty(key))
-      console.log(typeof config.ctx[key])
-      if (!config.ctx.hasOwnProperty(key)) continue
 
       let variable
       switch (typeof config.ctx[key]) {
@@ -93,7 +90,7 @@ export function thread(ctx: any = {}) {
     if (propertyKey === undefined && descriptor === undefined) {
       // @todo: treat it as a factory decorator (function decorator)
     }
-    
+
     console.log(descriptor.value)
     console.log('executing decorator')
     const originalMethod = descriptor.value
@@ -101,16 +98,21 @@ export function thread(ctx: any = {}) {
       const context = this
       console.log(this.__proto__, this[propertyKey])
       ctx.instance = Object.assign( Object.create( Object.getPrototypeOf(this)), this)
-      ctx.method = `{${originalMethod}}`
+      /*ctx.method = {
+        [propertyKey]: originalMethod
+      }*/
+      console.log(`ctx.method = {${originalMethod.toString()}}`)
+      eval(`ctx.method = {${originalMethod.toString()}}`)
+      ctx.key = propertyKey
       console.log(ctx)
-      console.log(originalMethod)
+      console.log(ctx.method.hello.toString())
       console.log('executing method')
       return job(data => {
         console.log('executing job')
         // @ts-ignore
         console.log(instance, method)
         // @ts-ignore
-        return method.apply(instance, data)
+        return method[key].apply(instance, data)
       }, {ctx, data: {...args}})
     }
     /*descriptor.value = async function (data) {
