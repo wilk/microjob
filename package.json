@@ -9,7 +9,7 @@
     "copy-assets": "cp src/worker.js dist",
     "clean": "rm -rf dist",
     "pretest": "npm run lint",
-    "test": "node --experimental-worker node_modules/.bin/jest",
+    "test": "node --experimental-worker node_modules/.bin/jest --detectOpenHandles",
     "test-watch": "node --experimental-worker node_modules/.bin/jest --watchAll",
     "docs": "gitbook build . docs",
     "serve-docs": "gitbook serve",
