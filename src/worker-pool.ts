@@ -86,11 +86,6 @@ class WorkerPool extends EventEmitter {
       worker.once('error', (error: Error) => {
         throw error
       })
-
-      if (this.state === WORKER_POOL_STATE_OFF) {
-        this.teardown()
-        break
-      }
     }
   }
 
