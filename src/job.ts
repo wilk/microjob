@@ -11,8 +11,6 @@ workerPool.on('tick', ({ work, worker }: {work: Task, worker: Worker}) => {
   try {
     let variables = ''
     for (const key in config.ctx) {
-      console.log(key, config.ctx[key])
-
       let variable
       switch (typeof config.ctx[key]) {
         case 'string':
@@ -24,7 +22,6 @@ workerPool.on('tick', ({ work, worker }: {work: Task, worker: Worker}) => {
         default:
           variable = config.ctx[key]
       }
-      console.log(variable)
       variables += `let ${key} = ${variable}\n`
     }
 
@@ -41,8 +38,6 @@ workerPool.on('tick', ({ work, worker }: {work: Task, worker: Worker}) => {
       return await (${handler.toString()})(dataDeserialized)
     }
     `
-
-    console.log(workerStr)
 
     // @ts-ignore
     worker.once('message', (message: any) => {
@@ -81,11 +76,11 @@ export function job<T>(handler: <T>(data?: any) => void, config: Config = { ctx:
   })
 }
 
-export function stop() {
+export function stop(): void {
   workerPool.teardown()
 }
 
-export function thread(ctx: any = {}) {
+export function thread(ctx: any = {}): (target: any, propertyKey?: string, descriptor?: PropertyDescriptor) => PropertyDescriptor {
   return function (target: any, propertyKey?: string, descriptor?: PropertyDescriptor) {
     if (propertyKey === undefined && descriptor === undefined) {
       // @todo: treat it as a factory decorator (function decorator)
