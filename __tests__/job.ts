@@ -114,13 +114,12 @@ describe('Job Testing', () => {
 
     try {
       class Person {
-        constructor(private name: string) {
-          console.log(`hey from ${this.name}`)
-        }
+        constructor(private name: string) {}
 
-        @thread()
+        @thread({surname: 'bar'})
         hello(sentence: string): string {
-          return `hey from ${this.name}: ${sentence}`
+          // @ts-ignore
+          return `hey from ${this.name} ${surname}: ${sentence}`
         }
       }
 
@@ -131,6 +130,6 @@ describe('Job Testing', () => {
     }
 
     expect(error).toBeUndefined()
-    expect(res).toBe(`hey from foo: the sentence`)
+    expect(res).toBe(`hey from foo bar: the sentence`)
   })
 })
