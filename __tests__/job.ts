@@ -118,16 +118,9 @@ describe('Job Testing', () => {
           console.log(`hey from ${this.name}`)
         }
 
-        public meh = 'lel'
-
         @thread()
         hello(sentence: string): string {
-          console.log('FROM JOB')
-          console.log(this)
-          // @ts-ignore
-          console.log(this.meh)
-          console.log(`hey from ${this.name}: ${sentence}`)
-          return 'wat'
+          return `hey from ${this.name}: ${sentence}`
         }
       }
 
@@ -138,6 +131,6 @@ describe('Job Testing', () => {
     }
 
     expect(error).toBeUndefined()
-    expect(res).toBe('wat')
+    expect(res).toBe(`hey from foo: the sentence`)
   })
 })
