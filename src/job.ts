@@ -91,42 +91,18 @@ export function thread(ctx: any = {}) {
       // @todo: treat it as a factory decorator (function decorator)
     }
 
-    console.log(descriptor.value)
-    console.log('executing decorator')
     const originalMethod = descriptor.value
-    descriptor.value = async function (...args) {
-      const context = this
-      console.log(this.__proto__, this[propertyKey])
-      ctx.instance = Object.assign( Object.create( Object.getPrototypeOf(this)), this)
-      /*ctx.method = {
-        [propertyKey]: originalMethod
-      }*/
-      console.log(`ctx.method = {${originalMethod.toString()}}`)
-      eval(`ctx.method = {${originalMethod.toString()}}`)
-      ctx.key = propertyKey
-      console.log(ctx)
-      console.log(ctx.method.hello.toString())
-      console.log('executing method')
+    descriptor.value = async function (...data) {
+      ctx.__instance__ = this
+      eval(`ctx.__method__ = function(instance, data) {
+        const obj = {${originalMethod.toString()}}
+        return obj.${propertyKey}.apply(instance, data)
+      }`)
       return job(data => {
-        console.log('executing job')
         // @ts-ignore
-        console.log(instance, method)
-        // @ts-ignore
-        return method[key].apply(instance, data)
-      }, {ctx, data: {...args}})
+        return __method__(__instance__, data)
+      }, {ctx, data})
     }
-    /*descriptor.value = async function (data) {
-      const context = this
-      console.log('executing method')
-      console.log(descriptor)
-      console.log(target)
-      console.log(propertyKey)
-      //return originalMethod.apply(context, [data])
-      return job(async data => {
-        console.log('executing method')
-        return originalMethod.apply(context, data), {ctx, data: {...args}}
-      })
-    }*/
     return descriptor
   }
 }
