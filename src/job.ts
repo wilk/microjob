@@ -17,6 +17,9 @@ workerPool.on('tick', ({ work, worker }: {work: Task, worker: Worker}) => {
           variable = `'${config.ctx[key]}'`
           break
         case 'object':
+          console.log(key, config.ctx[key])
+          // @todo: discriminate from natural object ({}) and class instances (new Class())
+          //        class instances need to have methods attached manually
           variable = JSON.stringify(config.ctx[key])
           break
         default:
@@ -38,6 +41,8 @@ workerPool.on('tick', ({ work, worker }: {work: Task, worker: Worker}) => {
       return await (${handler.toString()})(dataDeserialized)
     }
     `
+
+    console.log(workerStr)
 
     // @ts-ignore
     worker.once('message', (message: any) => {
@@ -82,13 +87,22 @@ export function stop(): void {
 
 export function thread(ctx: any = {}): (target: any, propertyKey?: string, descriptor?: PropertyDescriptor) => PropertyDescriptor {
   return function (target: any, propertyKey?: string, descriptor?: PropertyDescriptor) {
-    if (propertyKey === undefined && descriptor === undefined) {
+    /*if (propertyKey === undefined && descriptor === undefined) {
       // @todo: treat it as a factory decorator (function decorator)
-    }
+    }*/
 
     const originalMethod = descriptor.value
     descriptor.value = async function (...data) {
-      ctx.__instance__ = this
+      console.log(Object.getPrototypeOf(this), this, target)
+      console.log(this.__proto__, this.__prototype__, this.proto, this.prototype)
+      console.log(target.__proto__)
+      ctx.__instance__ = Object.assign(Object.create(Object.getPrototypeOf(this)), this)
+      for (const method of Object.getOwnPropertyNames(Object.getPrototypeOf(this))) {
+        console.log(method)
+        ctx.__instance__[method] = this[method]
+        ctx.__instance__.__proto__[method] = this[method]
+      }
+      console.log(ctx.__instance__)
       eval(`ctx.__method__ = function(instance, data) {
         const obj = {${originalMethod.toString()}}
         return obj.${propertyKey}.apply(instance, data)
