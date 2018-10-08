@@ -3,7 +3,7 @@ import { job, stop, thread } from '../src/job'
 afterAll(() => stop())
 
 describe('Job Testing', () => {
-  xit('should execute an empty inline job', async () => {
+  it('should execute an empty inline job', async () => {
     let error
     let res
 
@@ -22,7 +22,7 @@ describe('Job Testing', () => {
     expect(res).toBe(1000000)
   })
 
-  xit('should execute a list of inline jobs', async () => {
+  it('should execute a list of inline jobs', async () => {
     let error
     let results
 
@@ -43,7 +43,7 @@ describe('Job Testing', () => {
     expect(results).toEqual([1000000, 1000000, 1000000])
   })
 
-  xit('should not return a function', async () => {
+  it('should not return a function', async () => {
     let error
     let res
 
@@ -59,7 +59,7 @@ describe('Job Testing', () => {
     expect(res).toBeUndefined()
   })
 
-  xit('should catch job errors', async () => {
+  it('should catch job errors', async () => {
     let error
     let res
 
@@ -75,7 +75,7 @@ describe('Job Testing', () => {
     expect(res).toBeUndefined()
   })
 
-  xit('should throw an error if the worker is not a function', async () => {
+  it('should throw an error if the worker is not a function', async () => {
     let error
     let res
 
@@ -92,7 +92,7 @@ describe('Job Testing', () => {
     expect(res).toBeUndefined()
   })
 
-  xit('should throw a serialization error when a class is given back to main thread', async () => {
+  it('should throw a serialization error when a class is given back to main thread', async () => {
     let error
     let res
 
@@ -106,30 +106,5 @@ describe('Job Testing', () => {
     expect(error.message).toEqual('class Person {\n            } could not be cloned.')
     expect(typeof error.stack).toBe('string')
     expect(res).toBeUndefined()
-  })
-
-  it('should execute a method into a separated thread', async () => {
-    let error
-    let res
-
-    try {
-      class Person {
-        constructor(private name: string) {}
-
-        @thread({surname: 'bar'})
-        hello(sentence: string): string {
-          // @ts-ignore
-          return `hey from ${this.name} ${surname}: ${sentence}`
-        }
-      }
-
-      const foo = new Person('foo')
-      res = await foo.hello('the sentence')
-    } catch (err) {
-      error = err
-    }
-
-    expect(error).toBeUndefined()
-    expect(res).toBe(`hey from foo bar: the sentence`)
   })
 })
