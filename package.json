@@ -15,6 +15,7 @@
     "serve-docs": "gitbook serve",
     "lint": "tslint src/**/*.ts __tests__/**/*.ts",
     "prerelease": "npm run lint; npm test; npm run build; npm run docs",
+    "coverage": "node --experimental-worker node_modules/.bin/jest --coverage",
     "report-coverage": "node --experimental-worker node_modules/.bin/jest --coverage && cat ./coverage/lcov.info | coveralls"
   },
   "engines": {
