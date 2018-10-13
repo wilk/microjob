@@ -34,4 +34,32 @@ describe('Job Context Testing', () => {
     expect(error).toBeUndefined()
     expect(res).toEqual({ hello: ctx.hello, numb: ctx.numb, bool: ctx.bool, obj: ctx.obj, arr: ctx.arr })
   })
+
+  // todo: implement instance serialization
+  xit('should execute a an inline job passing object instances to context', async () => {
+    let error
+    let res
+
+    class Person {
+      constructor(private name, private surname) {}
+
+      fullname() {
+        return `${this.name} ${this.surname}`
+      }
+    }
+
+    const ctx = {
+      foo: new Person('foo', 'bar')
+    }
+
+    try {
+      // @ts-ignore
+      res = await job(() => foo.fullname(), { ctx })
+    } catch (err) {
+      error = err
+    }
+
+    expect(error).toBeUndefined()
+    expect(res).toEqual(ctx.foo.fullname())
+  })
 })
