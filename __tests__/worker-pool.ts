@@ -1,7 +1,5 @@
 import { job } from '../src/job'
 
-afterAll(() => stop())
-
 describe('Worker Pool Testing', () => {
   // todo: find a better way to test worker pool
   xit('should execute at most 4 jobs at a time', async () => {
