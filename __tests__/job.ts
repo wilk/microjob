@@ -43,6 +43,35 @@ describe('Job Testing', () => {
     expect(results).toEqual([1000000, 1000000, 1000000])
   })
 
+  // todo: the worker should be in ts as well, otherwise the job gets transpiled and it won't work
+  /*
+  this is what it tries to interpret: Error: __awaiter is not defined
+  () => __awaiter(this, void 0, void 0, function* () {
+      setTimeout(() => {
+          const numb = 10;
+          return numb;
+      }, 100);
+  })
+  */
+  xit('should execute an async inline job', async () => {
+    let error
+    let res
+
+    try {
+      res = await job(async () => {
+        setTimeout(() => {
+          const numb: number = 10
+          return numb
+        }, 100)
+      })
+    } catch (err) {
+      error = err
+    }
+
+    expect(error).toBeUndefined()
+    expect(res).toBe(10)
+  })
+
   it('should not return a function', async () => {
     let error
     let res
