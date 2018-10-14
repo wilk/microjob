@@ -1,4 +1,7 @@
-import { job } from '../src/job'
+import { job, start, stop } from '../src/job'
+
+beforeAll(async () => await start())
+afterAll(async () => await stop())
 
 describe('Worker Pool Testing', () => {
   // todo: find a better way to test worker pool

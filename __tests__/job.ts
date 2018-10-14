@@ -1,6 +1,7 @@
-import { job, stop } from '../src/job'
+import { job, stop, start } from '../src/job'
 
-afterAll(() => stop())
+beforeAll(async () => await start())
+afterAll(async () => await stop())
 
 describe('Job Testing', () => {
   it('should execute an empty inline job', async () => {
