@@ -61,7 +61,6 @@ class WorkerPool extends EventEmitter {
 
   setup(): Promise<void> {
     return new Promise((resolve, reject) => {
-      console.log('WORKER POOL SETUP', this.maxWorkers)
       let counter = 0
       for (let i = 0; i < this.maxWorkers; i++) {
         const worker = new Worker(`${__dirname}/worker.js`)
@@ -71,10 +70,7 @@ class WorkerPool extends EventEmitter {
           worker
         })
 
-        worker.once('exit', () => console.log('WORKER EXIT'))
-
         worker.once('online', (index => () => {
-          console.log('WORKER ONLINE', index)
           // next tick, so the worker js gets interpreted
           process.nextTick(() => {
             this.workers[index].status = WORKER_STATE_READY
@@ -83,10 +79,6 @@ class WorkerPool extends EventEmitter {
             // @ts-ignore
             this.workers[index].worker.removeAllListeners()
 
-            // if teardown has been called during the setup procedure, repeat it to flush the worker buffer
-            // if (this.state === WORKER_POOL_STATE_OFF) return this.teardown()
-
-            // this.tick()
             counter++
 
             if (counter === this.maxWorkers) resolve()
@@ -96,7 +88,6 @@ class WorkerPool extends EventEmitter {
         // startup error handler: should not be thrown or at least handled
         worker.once('error', (error: Error) => {
           reject(error)
-          // throw error
         })
       }
     })
@@ -105,12 +96,10 @@ class WorkerPool extends EventEmitter {
   teardown(): Promise<void> {
     return new Promise(resolve => {
       let counter = 0
-      console.log('WORKER POOL TEARDOWN', this.workers.length)
       for (let i = 0; i < this.workers.length; i++) {
         // @ts-ignore
         this.workers[i].worker.terminate(() => {
           counter++
-          console.log(counter, this.workers.length)
           if (counter === this.workers.length) {
             this.state = WORKER_POOL_STATE_OFF
             this.workers = []
