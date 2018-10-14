@@ -6,6 +6,7 @@ import { Task, WorkerWrapper } from './interfaces'
 
 const WORKER_STATE_READY = 'ready'
 const WORKER_STATE_BUSY = 'busy'
+const WORKER_STATE_OFF = 'off'
 
 const WORKER_POOL_STATE_ON = 'on'
 const WORKER_POOL_STATE_OFF = 'off'
@@ -17,8 +18,6 @@ class WorkerPool extends EventEmitter {
 
   constructor(private maxWorkers: number) {
     super()
-
-    this.setup()
   }
 
   tick(): void {
@@ -60,43 +59,66 @@ class WorkerPool extends EventEmitter {
     }
   }
 
-  setup(): void {
-    for (let i = 0; i < this.maxWorkers; i++) {
-      const worker = new Worker(`${__dirname}/worker.js`)
+  setup(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      console.log('WORKER POOL SETUP', this.maxWorkers)
+      let counter = 0
+      for (let i = 0; i < this.maxWorkers; i++) {
+        const worker = new Worker(`${__dirname}/worker.js`)
 
-      worker.once('online', () => {
-        // next tick, so the worker js gets interpreted
-        process.nextTick(() => {
-          this.workers.push({
-            status: WORKER_STATE_READY,
-            worker
-          })
-
-          // remove previous listeners, like the startup error handler
-          worker.removeAllListeners()
-
-          // if teardown has been called during the setup procedure, repeat it to flush the worker buffer
-          if (this.state === WORKER_POOL_STATE_OFF) return this.teardown()
-
-          this.tick()
+        this.workers.push({
+          status: WORKER_STATE_OFF,
+          worker
         })
-      })
 
-      // startup error handler: should not be thrown or at least handled
-      worker.once('error', (error: Error) => {
-        throw error
-      })
-    }
+        worker.once('exit', () => console.log('WORKER EXIT'))
+
+        worker.once('online', (index => () => {
+          console.log('WORKER ONLINE', index)
+          // next tick, so the worker js gets interpreted
+          process.nextTick(() => {
+            this.workers[index].status = WORKER_STATE_READY
+
+            // remove previous listeners, like the startup error handler
+            // @ts-ignore
+            this.workers[index].worker.removeAllListeners()
+
+            // if teardown has been called during the setup procedure, repeat it to flush the worker buffer
+            // if (this.state === WORKER_POOL_STATE_OFF) return this.teardown()
+
+            // this.tick()
+            counter++
+
+            if (counter === this.maxWorkers) resolve()
+          })
+        })(i))
+
+        // startup error handler: should not be thrown or at least handled
+        worker.once('error', (error: Error) => {
+          reject(error)
+          // throw error
+        })
+      }
+    })
   }
 
-  teardown(): void {
-    for (let i = 0; i < this.workers.length; i++) {
-      // @ts-ignore
-      this.workers[i].worker.terminate()
-    }
-
-    this.state = WORKER_POOL_STATE_OFF
-    this.workers = []
+  teardown(): Promise<void> {
+    return new Promise(resolve => {
+      let counter = 0
+      console.log('WORKER POOL TEARDOWN', this.workers.length)
+      for (let i = 0; i < this.workers.length; i++) {
+        // @ts-ignore
+        this.workers[i].worker.terminate(() => {
+          counter++
+          console.log(counter, this.workers.length)
+          if (counter === this.workers.length) {
+            this.state = WORKER_POOL_STATE_OFF
+            this.workers = []
+            resolve()
+          }
+        })
+      }
+    })
   }
 }
 
