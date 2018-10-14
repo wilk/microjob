@@ -79,5 +79,9 @@ export function job<T>(handler: <T>(data?: any) => void, config: Config = { ctx:
 }
 
 export function stop() {
-  workerPool.teardown()
+  return workerPool.teardown()
+}
+
+export function start() {
+  return workerPool.setup()
 }
