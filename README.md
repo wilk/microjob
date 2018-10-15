@@ -33,9 +33,12 @@ $ npm install --save microjob
 ## Quick Example
 ```js
 (async () => {
-  const { job, stop } = require('microjob')
+  const { job, start, stop } = require('microjob')
 
   try {
+    // start the worker pool
+    await start()
+
     // this function will be executed in another thread
     const res = await job(() => {
       let i = 0
@@ -49,10 +52,10 @@ $ npm install --save microjob
     console.log(res) // 1000000
   } catch (err) {
     console.error(err)
+  } finally {
+    // shutdown worker pool
+    stop()
   }
-
-  // graceful shutdown
-  stop()
 })()
 ```
 
