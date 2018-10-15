@@ -16,15 +16,40 @@ $ export MAX_WORKERS=10; node --experimental-worker index.js
 
 Invoking `job` on a function will put it on a task queue and then, when a worker is available, it will be executed, returning the desired result or an error.
 
+## Setup
+Before working with microjob you need to boot the worker pool:
+
+```js
+(async () => {
+  const { start } = require('microjob')
+
+  try {
+    // start worker pool
+    await start()
+
+    // ...
+  } catch (err) {
+    console.error(err)
+  }
+})()
+```
+
+`start` returns a promise and it will be resolved when all the threads are up and running, available to consume the internal jobs queue.
+
+It's a good practice to await `start` thus to avoid race conditions.
+
 ## Sync job
 The common and most used example is the sync job.
 A sync job is just a function working in background, in another thread, avoiding to block the main thread with heavy CPU load, made of sync function calls.
 
 ```js
 (async () => {
-  const { job } = require('microjob')
+  const { start, job } = require('microjob')
 
   try {
+    // start worker pool
+    await start()
+
     // this function will be executed in another thread
     const res = await job(() => {
       let i = 0
@@ -49,9 +74,12 @@ An asynchronous job is a task with at least one async call: for instance, a quer
 
 ```js
 (async () => {
-  const { job } = require('microjob')
+  const { start, job } = require('microjob')
 
   try {
+    // start worker pool
+    await start()
+
     // this function will be executed in another thread
     const res = await job(async () => {
       let i = 0
@@ -78,9 +106,12 @@ Passing custom data to the job is quite easy as calling a function:
 
 ```js
 (async () => {
-  const { job } = require('microjob')
+  const { start, job } = require('microjob')
 
   try {
+    // start worker pool
+    await start()
+
     // this function will be executed in another thread
     const res = await job(data => {
       let i = 0
@@ -108,9 +139,12 @@ Achieving the same result can be done by passing the context object:
 
 ```js
 (async () => {
-  const { job } = require('microjob')
+  const { start, job } = require('microjob')
 
   try {
+    // start worker pool
+    await start()
+
     // this function will be executed in another thread
     const counter = 1000000
     const res = await job(() => {
@@ -132,9 +166,12 @@ When you don't need microjob anymore, you can shut it down with the `stop` funct
 
 ```js
 (async () => {
-  const { job, stop } = require('microjob')
+  const { start, job, stop } = require('microjob')
 
   try {
+    // start worker pool
+    await start()
+
     // this function will be executed in another thread
     const counter = 1000000
     const res = await job(() => {
@@ -147,9 +184,10 @@ When you don't need microjob anymore, you can shut it down with the `stop` funct
     console.log(res) // 1000000
   } catch (err) {
     console.error(err)
+  } finally {
+    // stop worker pool
+    await stop()
   }
-
-  stop()
 })()
 ```
 
