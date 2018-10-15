@@ -180,7 +180,8 @@
                                 <h1 id="microjob">Microjob</h1>
 <p><a href="https://badge.fury.io/js/microjob" target="_blank"><img src="https://badge.fury.io/js/microjob.svg" alt="npm version"></a>
 <a href="https://travis-ci.org/wilk/microjob" target="_blank"><img src="https://travis-ci.org/wilk/microjob.svg?branch=master" alt="Build Status"></a>
-<a href="https://coveralls.io/github/wilk/microjob?branch=feature%2Fcoverage" target="_blank"><img src="https://coveralls.io/repos/github/wilk/microjob/badge.svg?branch=feature%2Fcoverage" alt="Coverage Status"></a></p>
+<a href="https://coveralls.io/github/wilk/microjob?branch=feature%2Fcoverage" target="_blank"><img src="https://coveralls.io/repos/github/wilk/microjob/badge.svg?branch=feature%2Fcoverage" alt="Coverage Status"></a>
+<a href="https://david-dm.org/wilk/microjob?path=packages/microjob" target="_blank"><img src="https://img.shields.io/david/wilk/microjob.svg" alt="Dependencies"></a></p>
 <p>A tiny wrapper for turning <a href="https://nodejs.org/api/worker_threads.html" target="_blank">Node.js threads</a> in easy-to-use routines for CPU-bound.</p>
 <p><img src="https://ljdchost.com/K074MgM.gif" alt="When my multithreaded program works like a charm"></p>
 <p><a href="https://thecodinglove.com/when-my-multithreaded-program-works-like-a-charm" target="_blank">When my multithreaded program works like a charm - thecodinglove</a></p>
@@ -200,9 +201,12 @@ Quoting the documentation:</p>
 </code></pre>
 <h2 id="quick-example">Quick Example</h2>
 <pre><code class="lang-js">(<span class="hljs-keyword">async</span> () =&gt; {
-  <span class="hljs-keyword">const</span> { job, stop } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;microjob&apos;</span>)
+  <span class="hljs-keyword">const</span> { job, start, stop } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;microjob&apos;</span>)
 
   <span class="hljs-keyword">try</span> {
+    <span class="hljs-comment">// start the worker pool</span>
+    <span class="hljs-keyword">await</span> start()
+
     <span class="hljs-comment">// this function will be executed in another thread</span>
     <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> job(() =&gt; {
       <span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>
@@ -216,10 +220,10 @@ Quoting the documentation:</p>
     <span class="hljs-built_in">console</span>.log(res) <span class="hljs-comment">// 1000000</span>
   } <span class="hljs-keyword">catch</span> (err) {
     <span class="hljs-built_in">console</span>.error(err)
+  } <span class="hljs-keyword">finally</span> {
+    <span class="hljs-comment">// shutdown worker pool</span>
+    stop()
   }
-
-  <span class="hljs-comment">// graceful shutdown</span>
-  stop()
 })()
 </code></pre>
 <h2 id="documentation">Documentation</h2>
@@ -271,7 +275,7 @@ Quoting the documentation:</p>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Introduction","level":"1.1","depth":1,"next":{"title":"Guide","level":"1.1.1","depth":2,"path":"GUIDE.md","ref":"GUIDE.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"README.md","mtime":"2018-09-20T15:58:23.171Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-10-02T21:09:29.433Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Introduction","level":"1.1","depth":1,"next":{"title":"Guide","level":"1.1.1","depth":2,"path":"GUIDE.md","ref":"GUIDE.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"README.md","mtime":"2018-10-15T06:46:56.800Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-10-15T06:47:04.589Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

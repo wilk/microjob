@@ -193,14 +193,22 @@
 }
 </code></pre>
 <p>To know how to use it, please refer to the <a href="GUIDE.html#sync-job">Job Guide</a></p>
+<h2 id="start">start</h2>
+<p><strong>start</strong> can be required directly from microjob:</p>
+<pre><code class="lang-js"><span class="hljs-keyword">const</span> {start} = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;microjob&apos;</span>)
+</code></pre>
+<p>Its signature:</p>
+<pre><code class="lang-ts"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">start</span>(<span class="hljs-params"></span>): <span class="hljs-title">Promise</span>&lt;<span class="hljs-title">void</span>&gt;</span>;
+</code></pre>
+<p>To know how to use it, please refer to the <a href="GUIDE.html#setup">Setup Guide</a></p>
 <h2 id="stop">stop</h2>
 <p><strong>stop</strong> can be required directly from microjob:</p>
 <pre><code class="lang-js"><span class="hljs-keyword">const</span> {stop} = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;microjob&apos;</span>)
 </code></pre>
 <p>It&apos;s a function with this signature:</p>
-<pre><code class="lang-ts"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">stop</span>(<span class="hljs-params"></span>): <span class="hljs-title">void</span>
-</span></code></pre>
-<p>To know how to use it, please refer to the <a href="GUIDE.html#graceful-shutdown">Teardown Guide</a></p>
+<pre><code class="lang-ts"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">stop</span>(<span class="hljs-params"></span>): <span class="hljs-title">Promise</span>&lt;<span class="hljs-title">void</span>&gt;</span>;
+</code></pre>
+<p>To know how to use it, please refer to the <a href="GUIDE.html#forceful-shutdown">Teardown Guide</a></p>
 
                                 
                                 </section>
@@ -240,7 +248,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"API","level":"1.1.2","depth":2,"previous":{"title":"Guide","level":"1.1.1","depth":2,"path":"GUIDE.md","ref":"GUIDE.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"API.md","mtime":"2018-10-02T21:08:33.795Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-10-02T21:09:29.433Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"API","level":"1.1.2","depth":2,"previous":{"title":"Guide","level":"1.1.1","depth":2,"path":"GUIDE.md","ref":"GUIDE.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"API.md","mtime":"2018-10-15T06:46:56.799Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-10-15T06:47:04.589Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>
