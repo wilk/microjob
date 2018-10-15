@@ -25,6 +25,21 @@ Config<T = {}, U = {}> {
 
 To know how to use it, please refer to the [Job Guide](GUIDE.md#sync-job)
 
+## start
+**start** can be required directly from microjob:
+
+```js
+const {start} = require('microjob')
+```
+
+Its signature:
+
+```ts
+function start(): Promise<void>;
+```
+
+To know how to use it, please refer to the [Setup Guide](GUIDE.md#setup)
+
 ## stop
 **stop** can be required directly from microjob:
 
@@ -35,7 +50,7 @@ const {stop} = require('microjob')
 It's a function with this signature:
 
 ```ts
-function stop(): void
+function stop(): Promise<void>;
 ```
 
-To know how to use it, please refer to the [Teardown Guide](GUIDE.md#graceful-shutdown)
+To know how to use it, please refer to the [Teardown Guide](GUIDE.md#forceful-shutdown)
