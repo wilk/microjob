@@ -54,7 +54,7 @@ $ npm install --save microjob
     console.error(err)
   } finally {
     // shutdown worker pool
-    stop()
+    await stop()
   }
 })()
 ```
