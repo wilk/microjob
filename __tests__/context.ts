@@ -16,7 +16,7 @@ describe('Job Context Testing', () => {
       numb: 10,
       bool: true,
       obj: {
-        nested: 'deep'/*,
+        nested: 'deep' /*,
         date: new Date()*/
       },
       // date: new Date(),
@@ -27,13 +27,53 @@ describe('Job Context Testing', () => {
 
     try {
       // @ts-ignore
-      res = await job(() => ({ hello, numb, bool, obj, arr/*, date*/ }), { ctx })
+      res = await job(() => ({ hello, numb, bool, obj, arr /*, date*/ }), {
+        ctx
+      })
     } catch (err) {
       error = err
     }
 
     expect(error).toBeUndefined()
-    expect(res).toEqual({ hello: ctx.hello, numb: ctx.numb, bool: ctx.bool, obj: ctx.obj, arr: ctx.arr })
+    expect(res).toEqual({
+      hello: ctx.hello,
+      numb: ctx.numb,
+      bool: ctx.bool,
+      obj: ctx.obj,
+      arr: ctx.arr
+    })
+  })
+
+  it('should execute a function defined in context', async () => {
+    let error
+    let res
+
+    const ctx = {
+      arrowFun: () => {
+        let sum = 0
+        for (let i = 0; i < 1000; i++) {
+          sum += i
+        }
+        return sum
+      },
+      fun: function() {
+        let sum = 0
+        for (let i = 0; i < 1000; i++) {
+          sum += i
+        }
+        return sum
+      }
+    }
+
+    try {
+      // @ts-ignore
+      res = await job(() => [fun(), arrowFun()], { ctx })
+    } catch (err) {
+      error = err
+    }
+
+    expect(error).toBeUndefined()
+    expect(res).toEqual([499500, 499500])
   })
 
   // todo: implement instance serialization
