@@ -14,7 +14,8 @@ A tiny wrapper for turning [Node.js threads](https://nodejs.org/api/worker_threa
 ## Introduction
 
 Microjob is a tiny wrapper for Node.js threads and is intended to perform heavy CPU loads using anonymous functions.
-So, Microjob treats Node.js threads as temporary working units: if you need to spawn a long-living thread, then you should use the [default API](https://nodejs.org/api/worker_threads.html).
+~~So, Microjob treats Node.js threads as temporary working units: if you need to spawn a long-living thread, then you should use the [default API](https://nodejs.org/api/worker_threads.html).~~
+From version v0.1.0 microjob uses a **[Worker Pool](GUIDE.md#worker-pool)** 🎉
 
 Microjob follows the same line of the original Node.js documentation: use it only for CPU-bound jobs and not for I/O-bound purposes.
 Quoting the documentation:
