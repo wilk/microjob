@@ -74,3 +74,4 @@ Dive deep into the documentation to find more examples: **[Guide](GUIDE.md)**
 ## Known Limitations
 
 - **[serialize worker data](GUIDE.md#job-data)**
+- **[passing runtime context](GUIDE.md#job-context)**
