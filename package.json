@@ -72,6 +72,7 @@
     "@types/node": "^10.9.4",
     "coveralls": "^3.0.2",
     "gitbook-cli": "^2.3.2",
+    "gren": "0.0.1",
     "jest": "^23.6.0",
     "ts-jest": "^23.10.0",
     "ts-node": "^7.0.1",
