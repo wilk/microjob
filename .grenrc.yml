@@ -1,0 +1,3 @@
+dataSource: "commits"
+includeMessages: "commits"
+changelogFilename: "CHANGELOG.md"
