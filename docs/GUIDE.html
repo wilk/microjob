@@ -193,17 +193,17 @@ It can be tuned with the environment variable <code>MAX_WORKERS</code>:</p>
 <h2 id="setup">Setup</h2>
 <p>Before working with microjob you need to boot the worker pool:</p>
 <pre><code class="lang-js">(<span class="hljs-keyword">async</span> () =&gt; {
-  <span class="hljs-keyword">const</span> { start } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;microjob&apos;</span>)
+  <span class="hljs-keyword">const</span> { start } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;microjob&quot;</span>);
 
   <span class="hljs-keyword">try</span> {
     <span class="hljs-comment">// start worker pool</span>
-    <span class="hljs-keyword">await</span> start()
+    <span class="hljs-keyword">await</span> start();
 
     <span class="hljs-comment">// ...</span>
   } <span class="hljs-keyword">catch</span> (err) {
-    <span class="hljs-built_in">console</span>.error(err)
+    <span class="hljs-built_in">console</span>.error(err);
   }
-})()
+})();
 </code></pre>
 <p><code>start</code> returns a promise and it will be resolved when all the threads are up and running, available to consume the internal jobs queue.</p>
 <p>It&apos;s a good practice to await <code>start</code> thus to avoid race conditions.</p>
@@ -211,136 +211,147 @@ It can be tuned with the environment variable <code>MAX_WORKERS</code>:</p>
 <p>The common and most used example is the sync job.
 A sync job is just a function working in background, in another thread, avoiding to block the main thread with heavy CPU load, made of sync function calls.</p>
 <pre><code class="lang-js">(<span class="hljs-keyword">async</span> () =&gt; {
-  <span class="hljs-keyword">const</span> { start, job } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;microjob&apos;</span>)
+  <span class="hljs-keyword">const</span> { start, job } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;microjob&quot;</span>);
 
   <span class="hljs-keyword">try</span> {
     <span class="hljs-comment">// start worker pool</span>
-    <span class="hljs-keyword">await</span> start()
+    <span class="hljs-keyword">await</span> start();
 
     <span class="hljs-comment">// this function will be executed in another thread</span>
     <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> job(() =&gt; {
-      <span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>
+      <span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>;
       <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">1000000</span>; i++) {
         <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> j = <span class="hljs-number">0</span>; j &lt; <span class="hljs-number">1000000</span>; j++) {
           <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> k = <span class="hljs-number">0</span>; k &lt; <span class="hljs-number">1000000</span>; k++) {}
         }
       }
 
-      <span class="hljs-keyword">return</span> i
-    })
+      <span class="hljs-keyword">return</span> i;
+    });
 
-    <span class="hljs-built_in">console</span>.log(res) <span class="hljs-comment">// 1000000</span>
+    <span class="hljs-built_in">console</span>.log(res); <span class="hljs-comment">// 1000000</span>
   } <span class="hljs-keyword">catch</span> (err) {
-    <span class="hljs-built_in">console</span>.error(err)
+    <span class="hljs-built_in">console</span>.error(err);
   }
-})()
+})();
 </code></pre>
 <h2 id="async-job">Async job</h2>
 <p>An asynchronous job is a task with at least one async call: for instance, a query to a DB, a HTTP request, a file system call, etc, and of course plus a heavy CPU load.</p>
 <pre><code class="lang-js">(<span class="hljs-keyword">async</span> () =&gt; {
-  <span class="hljs-keyword">const</span> { start, job } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;microjob&apos;</span>)
+  <span class="hljs-keyword">const</span> { start, job } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;microjob&quot;</span>);
 
   <span class="hljs-keyword">try</span> {
     <span class="hljs-comment">// start worker pool</span>
-    <span class="hljs-keyword">await</span> start()
+    <span class="hljs-keyword">await</span> start();
 
     <span class="hljs-comment">// this function will be executed in another thread</span>
     <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> job(<span class="hljs-keyword">async</span> () =&gt; {
-      <span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>
+      <span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>;
       <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">1000000</span>; i++) {
         <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> j = <span class="hljs-number">0</span>; j &lt; <span class="hljs-number">1000000</span>; j++) {
           <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> k = <span class="hljs-number">0</span>; k &lt; <span class="hljs-number">1000000</span>; k++) {
-            <span class="hljs-keyword">await</span> http.get(<span class="hljs-string">&apos;www.google.it&apos;</span>)
+            <span class="hljs-keyword">await</span> http.get(<span class="hljs-string">&quot;www.google.it&quot;</span>);
           }
         }
       }
 
-      <span class="hljs-keyword">return</span> i
-    })
+      <span class="hljs-keyword">return</span> i;
+    });
 
-    <span class="hljs-built_in">console</span>.log(res) <span class="hljs-comment">// 1000000</span>
+    <span class="hljs-built_in">console</span>.log(res); <span class="hljs-comment">// 1000000</span>
   } <span class="hljs-keyword">catch</span> (err) {
-    <span class="hljs-built_in">console</span>.error(err)
+    <span class="hljs-built_in">console</span>.error(err);
   }
-})()
+})();
 </code></pre>
 <h2 id="job-data">Job data</h2>
 <p>Passing custom data to the job is quite easy as calling a function:</p>
 <pre><code class="lang-js">(<span class="hljs-keyword">async</span> () =&gt; {
-  <span class="hljs-keyword">const</span> { start, job } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;microjob&apos;</span>)
+  <span class="hljs-keyword">const</span> { start, job } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;microjob&quot;</span>);
 
   <span class="hljs-keyword">try</span> {
     <span class="hljs-comment">// start worker pool</span>
-    <span class="hljs-keyword">await</span> start()
+    <span class="hljs-keyword">await</span> start();
 
     <span class="hljs-comment">// this function will be executed in another thread</span>
-    <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> job(data =&gt; {
-      <span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>
-      <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; data.counter; i++) {}
+    <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> job(
+      data =&gt; {
+        <span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; data.counter; i++) {}
 
-      <span class="hljs-keyword">return</span> i
-    }, {data: {counter: <span class="hljs-number">1000000</span>}})
+        <span class="hljs-keyword">return</span> i;
+      },
+      { data: { counter: <span class="hljs-number">1000000</span> } }
+    );
 
-    <span class="hljs-built_in">console</span>.log(res) <span class="hljs-comment">// 1000000</span>
+    <span class="hljs-built_in">console</span>.log(res); <span class="hljs-comment">// 1000000</span>
   } <span class="hljs-keyword">catch</span> (err) {
-    <span class="hljs-built_in">console</span>.error(err)
+    <span class="hljs-built_in">console</span>.error(err);
   }
-})()
+})();
 </code></pre>
 <p>Both data passed to the worker and the returned one are serialized with <a href="https://nodejs.org/api/v8.html#v8_v8_serialize_value" target="_blank">v8 serializer</a>: this means that only some JS data structures are allowed (for instance, functions and classes are forbidden).</p>
 <h2 id="job-context">Job context</h2>
 <p>It&apos;s a common practice using the upper scope of the function&apos;s container to reuse the already defined variables.</p>
 <p><strong>Context is evaluated inside the worker thread. This means it needs to be sanitized before passing it to microjob.
 An attacker could perform a JS injection as described <a href="https://github.com/wilk/microjob/issues/2" target="_blank">in this issue</a></strong></p>
+<p><strong>Another limitation with context is that currently (Node.js v11) does not provide a way to serialize and then rehydrate class instances at runtime via message passing (<code>postMessage</code>).
+So it&apos;s not possible to pass custom class instances nor native class instances like <code>Date</code> using job context.</strong></p>
 <p>Achieving the same result can be done by passing the context object:</p>
 <pre><code class="lang-js">(<span class="hljs-keyword">async</span> () =&gt; {
-  <span class="hljs-keyword">const</span> { start, job } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;microjob&apos;</span>)
+  <span class="hljs-keyword">const</span> { start, job } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;microjob&quot;</span>);
 
   <span class="hljs-keyword">try</span> {
     <span class="hljs-comment">// start worker pool</span>
-    <span class="hljs-keyword">await</span> start()
+    <span class="hljs-keyword">await</span> start();
 
     <span class="hljs-comment">// this function will be executed in another thread</span>
-    <span class="hljs-keyword">const</span> counter = <span class="hljs-number">1000000</span>
-    <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> job(() =&gt; {
-      <span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>
-      <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; counter; i++) {}
+    <span class="hljs-keyword">const</span> counter = <span class="hljs-number">1000000</span>;
+    <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> job(
+      () =&gt; {
+        <span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; counter; i++) {}
 
-      <span class="hljs-keyword">return</span> i
-    }, {ctx: {counter}})
+        <span class="hljs-keyword">return</span> i;
+      },
+      { ctx: { counter } }
+    );
 
-    <span class="hljs-built_in">console</span>.log(res) <span class="hljs-comment">// 1000000</span>
+    <span class="hljs-built_in">console</span>.log(res); <span class="hljs-comment">// 1000000</span>
   } <span class="hljs-keyword">catch</span> (err) {
-    <span class="hljs-built_in">console</span>.error(err)
+    <span class="hljs-built_in">console</span>.error(err);
   }
-})()
+})();
 </code></pre>
 <h2 id="forceful-shutdown">Forceful shutdown</h2>
 <p>When you don&apos;t need microjob anymore, you can shut it down with the <code>stop</code> function:</p>
 <pre><code class="lang-js">(<span class="hljs-keyword">async</span> () =&gt; {
-  <span class="hljs-keyword">const</span> { start, job, stop } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;microjob&apos;</span>)
+  <span class="hljs-keyword">const</span> { start, job, stop } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;microjob&quot;</span>);
 
   <span class="hljs-keyword">try</span> {
     <span class="hljs-comment">// start worker pool</span>
-    <span class="hljs-keyword">await</span> start()
+    <span class="hljs-keyword">await</span> start();
 
     <span class="hljs-comment">// this function will be executed in another thread</span>
-    <span class="hljs-keyword">const</span> counter = <span class="hljs-number">1000000</span>
-    <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> job(() =&gt; {
-      <span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>
-      <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; counter; i++) {}
+    <span class="hljs-keyword">const</span> counter = <span class="hljs-number">1000000</span>;
+    <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> job(
+      () =&gt; {
+        <span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; counter; i++) {}
 
-      <span class="hljs-keyword">return</span> i
-    }, {ctx: {counter}})
+        <span class="hljs-keyword">return</span> i;
+      },
+      { ctx: { counter } }
+    );
 
-    <span class="hljs-built_in">console</span>.log(res) <span class="hljs-comment">// 1000000</span>
+    <span class="hljs-built_in">console</span>.log(res); <span class="hljs-comment">// 1000000</span>
   } <span class="hljs-keyword">catch</span> (err) {
-    <span class="hljs-built_in">console</span>.error(err)
+    <span class="hljs-built_in">console</span>.error(err);
   } <span class="hljs-keyword">finally</span> {
     <span class="hljs-comment">// stop worker pool</span>
-    <span class="hljs-keyword">await</span> stop()
+    <span class="hljs-keyword">await</span> stop();
   }
-})()
+})();
 </code></pre>
 <p><code>stop</code> ensures that every worker of the worker pool is <a href="https://nodejs.org/api/worker_threads.html#worker_threads_worker_terminate_callback" target="_blank">terminated</a>.</p>
 
@@ -386,7 +397,7 @@ An attacker could perform a JS injection as described <a href="https://github.co
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Guide","level":"1.1.1","depth":2,"next":{"title":"API","level":"1.1.2","depth":2,"path":"API.md","ref":"API.md","articles":[]},"previous":{"title":"Introduction","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[{"title":"Guide","level":"1.1.1","depth":2,"path":"GUIDE.md","ref":"GUIDE.md","articles":[]},{"title":"API","level":"1.1.2","depth":2,"path":"API.md","ref":"API.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"GUIDE.md","mtime":"2018-10-15T06:46:56.800Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-10-15T06:53:59.009Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Guide","level":"1.1.1","depth":2,"next":{"title":"API","level":"1.1.2","depth":2,"path":"API.md","ref":"API.md","articles":[]},"previous":{"title":"Introduction","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[{"title":"Guide","level":"1.1.1","depth":2,"path":"GUIDE.md","ref":"GUIDE.md","articles":[]},{"title":"API","level":"1.1.2","depth":2,"path":"API.md","ref":"API.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"GUIDE.md","mtime":"2018-11-04T06:10:21.129Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-11-04T06:12:45.679Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

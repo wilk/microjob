@@ -201,40 +201,41 @@ Quoting the documentation:</p>
 </code></pre>
 <h2 id="quick-example">Quick Example</h2>
 <pre><code class="lang-js">(<span class="hljs-keyword">async</span> () =&gt; {
-  <span class="hljs-keyword">const</span> { job, start, stop } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;microjob&apos;</span>)
+  <span class="hljs-keyword">const</span> { job, start, stop } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;microjob&quot;</span>);
 
   <span class="hljs-keyword">try</span> {
     <span class="hljs-comment">// start the worker pool</span>
-    <span class="hljs-keyword">await</span> start()
+    <span class="hljs-keyword">await</span> start();
 
     <span class="hljs-comment">// this function will be executed in another thread</span>
     <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> job(() =&gt; {
-      <span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>
+      <span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>;
       <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">1000000</span>; i++) {
         <span class="hljs-comment">// heavy CPU load ...</span>
       }
 
-      <span class="hljs-keyword">return</span> i
-    })
+      <span class="hljs-keyword">return</span> i;
+    });
 
-    <span class="hljs-built_in">console</span>.log(res) <span class="hljs-comment">// 1000000</span>
+    <span class="hljs-built_in">console</span>.log(res); <span class="hljs-comment">// 1000000</span>
   } <span class="hljs-keyword">catch</span> (err) {
-    <span class="hljs-built_in">console</span>.error(err)
+    <span class="hljs-built_in">console</span>.error(err);
   } <span class="hljs-keyword">finally</span> {
     <span class="hljs-comment">// shutdown worker pool</span>
-    <span class="hljs-keyword">await</span> stop()
+    <span class="hljs-keyword">await</span> stop();
   }
-})()
+})();
 </code></pre>
 <h2 id="documentation">Documentation</h2>
 <p>Dive deep into the documentation to find more examples: <strong><a href="GUIDE.html">Guide</a></strong></p>
 <h2 id="known-issues">Known Issues</h2>
 <ul>
-<li><strong><a href="API.html#job-context">sanitize worker context</a></strong></li>
+<li><strong><a href="GUIDE.html#job-context">sanitize worker context</a></strong></li>
 </ul>
 <h2 id="known-limitations">Known Limitations</h2>
 <ul>
-<li><strong><a href="API.html#job-data">serialize worker data</a></strong></li>
+<li><strong><a href="GUIDE.html#job-data">serialize worker data</a></strong></li>
+<li><strong><a href="GUIDE.html#job-context">passing runtime context</a></strong></li>
 </ul>
 
                                 
@@ -275,7 +276,7 @@ Quoting the documentation:</p>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Introduction","level":"1.1","depth":1,"next":{"title":"Guide","level":"1.1.1","depth":2,"path":"GUIDE.md","ref":"GUIDE.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"README.md","mtime":"2018-10-15T06:53:52.577Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-10-15T06:53:59.009Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Introduction","level":"1.1","depth":1,"next":{"title":"Guide","level":"1.1.1","depth":2,"path":"GUIDE.md","ref":"GUIDE.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"README.md","mtime":"2018-11-04T06:05:11.097Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-11-04T06:12:45.679Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>
