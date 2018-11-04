@@ -44,26 +44,21 @@ describe('Job Testing', () => {
     expect(results).toEqual([1000000, 1000000, 1000000])
   })
 
-  // todo: the worker should be in ts as well, otherwise the job gets transpiled and it won't work
-  /*
-  this is what it tries to interpret: Error: __awaiter is not defined
-  () => __awaiter(this, void 0, void 0, function* () {
-      setTimeout(() => {
-          const numb = 10;
-          return numb;
-      }, 100);
-  })
-  */
-  xit('should execute an async inline job', async () => {
+  it('should execute an async inline job', async () => {
     let error
     let res
 
     try {
       res = await job(async () => {
-        setTimeout(() => {
-          const numb: number = 10
-          return numb
-        }, 100)
+        const asyncOp = () =>
+          new Promise(resolve => {
+            setTimeout(() => {
+              const numb: number = 10
+              resolve(numb)
+            }, 100)
+          })
+
+        return asyncOp()
       })
     } catch (err) {
       error = err
@@ -78,13 +73,15 @@ describe('Job Testing', () => {
     let res
 
     try {
-      res = await job(() => (() => console.log('hello there')))
+      res = await job(() => () => console.log('hello there'))
     } catch (err) {
       error = err
     }
 
     expect(error).toBeDefined()
-    expect(error.message).toEqual("() => console.log('hello there') could not be cloned.")
+    expect(error.message).toEqual(
+      "() => console.log('hello there') could not be cloned."
+    )
     expect(typeof error.stack).toBe('string')
     expect(res).toBeUndefined()
   })
@@ -94,7 +91,9 @@ describe('Job Testing', () => {
     let res
 
     try {
-      res = await job(() => { throw new Error('an exception') })
+      res = await job(() => {
+        throw new Error('an exception')
+      })
     } catch (err) {
       error = err
     }
@@ -117,7 +116,9 @@ describe('Job Testing', () => {
     }
 
     expect(error).toBeDefined()
-    expect(error.message).toEqual(`job needs a function.\nTry with:\n> job(() => {...}, config)`)
+    expect(error.message).toEqual(
+      `job needs a function.\nTry with:\n> job(() => {...}, config)`
+    )
     expect(typeof error.stack).toBe('string')
     expect(res).toBeUndefined()
   })
@@ -133,7 +134,9 @@ describe('Job Testing', () => {
     }
 
     expect(error).toBeDefined()
-    expect(error.message).toEqual('class Person {\n            } could not be cloned.')
+    expect(error.message).toEqual(
+      'class Person {\n            } could not be cloned.'
+    )
     expect(typeof error.stack).toBe('string')
     expect(res).toBeUndefined()
   })
