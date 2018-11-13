@@ -1,27 +1,62 @@
 // @ts-ignore
 import { Worker } from 'worker_threads'
+import v8 from 'v8'
 import os from 'os'
-import EventEmitter from 'events'
 import { Task, WorkerWrapper } from './interfaces'
 
 const WORKER_STATE_READY = 'ready'
+const WORKER_STATE_SPAWNING = 'spawning'
 const WORKER_STATE_BUSY = 'busy'
 const WORKER_STATE_OFF = 'off'
 
 const WORKER_POOL_STATE_ON = 'on'
 const WORKER_POOL_STATE_OFF = 'off'
 
-class WorkerPool extends EventEmitter {
+class WorkerPool {
   private taskQueue: Task[] = []
   private workers: WorkerWrapper[] = []
   private state = WORKER_POOL_STATE_ON
 
-  constructor(private maxWorkers: number) {
-    super()
+  constructor(private maxWorkers: number) {}
+
+  resurrect(deadWorker: WorkerWrapper): void {
+    // self healing procedure
+    const worker = new Worker(`${__dirname}/worker.js`)
+
+    deadWorker.status = WORKER_STATE_SPAWNING
+    deadWorker.worker = worker
+
+    worker.once('online', () =>
+      // next tick, so the worker js gets interpreted
+      process.nextTick(() => {
+        deadWorker.status = WORKER_STATE_READY
+
+        // remove previous listeners, like the startup error handler
+        // @ts-ignore
+        worker.removeAllListeners()
+
+        this.tick()
+      })
+    )
+
+    // startup error handler: should not be thrown or at least handled
+    worker.once('error', (error: Error) => {
+      console.error(error)
+      deadWorker.status = WORKER_STATE_OFF
+      // @ts-ignore
+      worker.removeAllListeners()
+
+      this.tick()
+    })
   }
 
   tick(): void {
     if (this.taskQueue.length === 0) return
+
+    // check for dead threads and resurrect them
+    this.workers
+      .filter(({ status }) => status === WORKER_STATE_OFF)
+      .forEach(this.resurrect)
 
     let availableWorker: WorkerWrapper
     for (let i = 0; i < this.workers.length; i++) {
@@ -37,7 +72,65 @@ class WorkerPool extends EventEmitter {
 
     availableWorker.status = WORKER_STATE_BUSY
     const { worker } = availableWorker
-    this.emit('tick', { work, worker })
+    const { handler, config, resolve, reject } = work
+
+    try {
+      let variables = ''
+      for (const key in config.ctx) {
+        if (!config.ctx.hasOwnProperty(key)) continue
+
+        let variable
+        switch (typeof config.ctx[key]) {
+          case 'string':
+            variable = `'${config.ctx[key]}'`
+            break
+          case 'object':
+            variable = JSON.stringify(config.ctx[key])
+            break
+          default:
+            variable = config.ctx[key]
+        }
+        variables += `let ${key} = ${variable}\n`
+      }
+
+      // @ts-ignore
+      const dataSerialized = v8.serialize(config.data)
+      const dataStr = JSON.stringify(dataSerialized)
+      const workerStr = `
+      async function __executor__() {
+        const v8 = require('v8')
+        ${variables}
+        const dataParsed = JSON.parse('${dataStr}')
+        const dataBuffer = Buffer.from(dataParsed.data)
+        const dataDeserialized = v8.deserialize(dataBuffer)
+        return await (${handler.toString()})(dataDeserialized)
+      }
+      `
+
+      // @ts-ignore
+      worker.once('message', (message: any) => {
+        this.free(worker)
+
+        if (typeof message.error === 'undefined' || message.error === null)
+          return resolve(message.data)
+
+        const error = new Error(message.error.message)
+        error.stack = message.error.stack
+        reject(error)
+      })
+
+      // @ts-ignore
+      worker.once('error', (error: Error) => {
+        availableWorker.status = WORKER_STATE_OFF
+        reject(error)
+        this.tick()
+      })
+
+      worker.postMessage(workerStr)
+    } catch (err) {
+      this.free(worker)
+      reject(err)
+    }
   }
 
   enqueue({ handler, config, resolve, reject }: Task): void {
@@ -61,34 +154,55 @@ class WorkerPool extends EventEmitter {
 
   setup(): Promise<void> {
     return new Promise((resolve, reject) => {
-      let counter = 0
+      let counterSuccess = 0
+      let counterFailure = 0
       for (let i = 0; i < this.maxWorkers; i++) {
         const worker = new Worker(`${__dirname}/worker.js`)
 
         this.workers.push({
-          status: WORKER_STATE_OFF,
+          status: WORKER_STATE_SPAWNING,
           worker
         })
 
-        worker.once('online', (index => () => {
-          // next tick, so the worker js gets interpreted
-          process.nextTick(() => {
-            this.workers[index].status = WORKER_STATE_READY
+        worker.once(
+          'online',
+          (index => () => {
+            // next tick, so the worker js gets interpreted
+            process.nextTick(() => {
+              this.workers[index].status = WORKER_STATE_READY
 
-            // remove previous listeners, like the startup error handler
-            // @ts-ignore
-            this.workers[index].worker.removeAllListeners()
+              // remove previous listeners, like the startup error handler
+              // @ts-ignore
+              this.workers[index].worker.removeAllListeners()
 
-            counter++
+              counterSuccess++
 
-            if (counter === this.maxWorkers) resolve()
-          })
-        })(i))
+              // if there's at least one working thread, go ahead
+              if (
+                counterSuccess > 0 &&
+                counterSuccess + counterFailure === this.maxWorkers
+              )
+                resolve()
+            })
+          })(i)
+        )
 
         // startup error handler: should not be thrown or at least handled
-        worker.once('error', (error: Error) => {
-          reject(error)
-        })
+        worker.once(
+          'error',
+          (index => (error: Error) => {
+            this.workers[index].status = WORKER_STATE_OFF
+            // @ts-ignore
+            this.workers[index].worker.removeAllListeners()
+            counterFailure++
+
+            // stop the worker pool if no worker is spawned
+            if (counterFailure === this.maxWorkers) {
+              this.state = WORKER_POOL_STATE_OFF
+              reject(error)
+            }
+          })(i)
+        )
       }
     })
   }
@@ -111,4 +225,6 @@ class WorkerPool extends EventEmitter {
   }
 }
 
-export default new WorkerPool(parseInt(process.env.MAX_WORKERS) || os.cpus().length)
+export default new WorkerPool(
+  parseInt(process.env.MAX_WORKERS) || os.cpus().length
+)
