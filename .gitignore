@@ -63,3 +63,4 @@ _book
 dist
 .vscode
 .env.local
+tsconfig.build.json
