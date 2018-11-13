@@ -51,12 +51,12 @@ class WorkerPool {
   }
 
   tick(): void {
-    if (this.taskQueue.length === 0) return
-
     // check for dead threads and resurrect them
     this.workers
       .filter(({ status }) => status === WORKER_STATE_OFF)
-      .forEach(this.resurrect)
+      .forEach((deadWorker: WorkerWrapper) => this.resurrect(deadWorker))
+
+    if (this.taskQueue.length === 0) return
 
     let availableWorker: WorkerWrapper
     for (let i = 0; i < this.workers.length; i++) {

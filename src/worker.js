@@ -17,6 +17,11 @@ parentPort.on('message', async worker => {
       message: err.message,
       stack: err.stack
     }
-    parentPort.postMessage(response)
+
+    try {
+      parentPort.postMessage(response)
+    } catch (err) {
+      console.error(err)
+    }
   }
 })

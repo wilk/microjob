@@ -5,6 +5,7 @@
     "target": "es2017",
     "noImplicitAny": false,
     "moduleResolution": "node",
+    "allowJs": true,
     "sourceMap": false,
     "outDir": "dist",
     "declaration": true,
