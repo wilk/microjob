@@ -18,6 +18,7 @@ class ParentPortMock extends EventEmitter {
 
 const parentPort = new ParentPortMock()
 let workersCounter = 0
+const mockCallback = jest.fn()
 
 // mock of Worker thread
 export class WorkerMock extends EventEmitter {
@@ -33,7 +34,12 @@ export class WorkerMock extends EventEmitter {
       this.emit('error', new Error(FAKE_ERROR_MESSAGE))
     )
 
-    setTimeout(() => this.emit('online'), 250)
+    setTimeout(() => {
+      if (workersCounter > MAX_THREADS) {
+        this.emit('error', new Error(FAKE_ERROR_MESSAGE))
+        mockCallback()
+      } else this.emit('online')
+    }, 250)
   }
 
   // parrot the worker
@@ -54,17 +60,17 @@ const mock = jest.mock('worker_threads', () => ({
 
 import { job, stop, start } from '../src/job'
 
-beforeAll(async () => await start())
 afterAll(async () => await stop())
 // restore original worker_threads module
 afterAll(() => mock.restoreAllMocks())
 
-describe('Self-Healing Testing', () => {
-  it('should resurrect a dead worker', async done => {
+describe('Fail Testing', () => {
+  it('should not resurrect a broken dead worker', async done => {
     let error
     let res
 
     try {
+      await start()
       res = await job(() => {
         let i = 0
         for (i = 0; i < 1000000; i++) {}
@@ -81,9 +87,9 @@ describe('Self-Healing Testing', () => {
       expect(error.message).toBe(FAKE_ERROR_MESSAGE)
       // if a dead worker has been resurrected, then the workersCounter must be greater
       // than the MAX_THREADS const
-      expect(workersCounter).toBe(MAX_THREADS + 1)
+      expect(mockCallback).toBeCalled()
 
       done()
-    }, 300)
+    }, 500)
   })
 })

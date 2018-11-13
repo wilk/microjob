@@ -123,6 +123,33 @@ describe('Job Testing', () => {
     expect(res).toBeUndefined()
   })
 
+  it('should throw an error if the config is not an object', async () => {
+    let error
+    let res
+
+    try {
+      // @ts-ignore
+      res = await job(
+        () => {
+          let i = 0
+          for (i = 0; i < 1000000; i++) {}
+
+          return i
+        },
+        { ctx: 'context' }
+      )
+    } catch (err) {
+      error = err
+    }
+
+    expect(error).toBeDefined()
+    expect(error.message).toEqual(
+      `job needs an object as ctx.\nTry with:\n> job(() => {...}, {ctx: {...}})`
+    )
+    expect(typeof error.stack).toBe('string')
+    expect(res).toBeUndefined()
+  })
+
   it('should throw a serialization error when a class is given back to main thread', async () => {
     let error
     let res
