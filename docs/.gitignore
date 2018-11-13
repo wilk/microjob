@@ -62,3 +62,4 @@ typings/
 _book
 dist
 .vscode
+.env.local

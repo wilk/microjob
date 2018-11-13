@@ -14,3 +14,4 @@ package-lock.json
 tsconfig.json
 tslint.json
 .bookignore
+.grenrc.yml
