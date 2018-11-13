@@ -5,7 +5,7 @@
   "main": "dist/job.js",
   "types": "dist/job.d.ts",
   "scripts": {
-    "build": "npm run clean; tsc; npm run copy-assets",
+    "build": "npm run clean; tsc -p tsconfig.build.json; npm run copy-assets",
     "copy-assets": "cp src/worker.js dist",
     "clean": "rm -rf dist",
     "pretest": "npm run lint",
