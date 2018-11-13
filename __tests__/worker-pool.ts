@@ -1,11 +1,13 @@
 import { job, start, stop } from '../src/job'
+import os from 'os'
+
+const MAX_THREADS = os.cpus().length
 
 beforeAll(async () => await start())
 afterAll(async () => await stop())
 
 describe('Worker Pool Testing', () => {
-  // todo: find a better way to test worker pool
-  xit('should execute at most 4 jobs at a time', async () => {
+  it(`should execute at most ${MAX_THREADS} jobs at a time`, async () => {
     let error
     let diff
 
@@ -13,7 +15,10 @@ describe('Worker Pool Testing', () => {
 
     try {
       const start = Date.now()
-      await Promise.all([job(task), job(task), job(task), job(task), job(task)])
+      const promises = []
+      for (let i = 0; i < MAX_THREADS; i++) promises.push(job(task))
+      promises.push(job(task))
+      await Promise.all(promises)
       diff = Date.now() - start
     } catch (err) {
       error = err
