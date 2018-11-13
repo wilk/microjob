@@ -66,6 +66,15 @@ $ npm install --save microjob
 })();
 ```
 
+## Features
+
+- 🛢️ Worker Pool
+- 🏥 auto self-healing
+- 🙌 easy and simple
+- 🕔 supports both sync and async jobs
+- 🛡️ huge test coverage
+- 📜 well documented
+
 ## Documentation
 
 Dive deep into the documentation to find more examples: **[Guide](GUIDE.md)**
