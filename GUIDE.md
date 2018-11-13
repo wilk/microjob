@@ -18,6 +18,18 @@ $ export MAX_WORKERS=10; node --experimental-worker index.js
 
 Invoking `job` on a function will put it on a task queue and then, when a worker is available, it will be executed, returning the desired result or an error.
 
+### Auto self-healing
+
+When a worker dies, the execution gets back to the caller and then the Worker Pool tries to spawn a new worker to refill its pool.
+
+Every worker has 3 types of state:
+
+- off
+- spawning
+- ready
+
+If the Worker Pool finds workers in an "off" state, it tries to revive them.
+
 ## Setup
 
 Before working with microjob you need to boot the worker pool:
