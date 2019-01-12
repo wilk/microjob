@@ -7,7 +7,7 @@
     "moduleResolution": "node",
     "sourceMap": false,
     "outDir": "dist",
-    "allowJs": true,
+    "declaration": true,
     "baseUrl": ".",
     "paths": {
       "*": ["node_modules/*"]
