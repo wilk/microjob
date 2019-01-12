@@ -8,6 +8,7 @@ _book
 public
 src
 tsconfig.json
+tsconfig.build.json
 tslint.json
 .travis.yml
 coverage
