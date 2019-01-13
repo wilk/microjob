@@ -2,6 +2,7 @@
 import { Worker } from 'worker_threads'
 import v8 from 'v8'
 import os from 'os'
+import path from 'path'
 import { Task, WorkerWrapper } from './interfaces'
 
 const WORKER_STATE_READY = 'ready'
@@ -21,7 +22,7 @@ class WorkerPool {
 
   resurrect(deadWorker: WorkerWrapper): void {
     // self healing procedure
-    const worker = new Worker(`${__dirname}/worker.js`)
+    const worker = new Worker(path.resolve(__dirname, './worker.js'))
 
     deadWorker.status = WORKER_STATE_SPAWNING
     deadWorker.worker = worker
