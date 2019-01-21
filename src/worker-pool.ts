@@ -4,6 +4,7 @@ import v8 from 'v8'
 import os from 'os'
 import path from 'path'
 import { Task, WorkerWrapper } from './interfaces'
+import EventEmitter from 'events'
 
 const WORKER_STATE_READY = 'ready'
 const WORKER_STATE_SPAWNING = 'spawning'
@@ -168,6 +169,23 @@ class WorkerPool {
           worker
         })
 
+        const event = new EventEmitter()
+        event.on('spawning', (isSuccess, ErrorReason) => {
+          if (isSuccess) {
+            ++counterSuccess
+          } else {
+            ++counterFailure
+          }
+          if (counterFailure == this.maxWorkers) {
+            reject(ErrorReason)
+          } else if (
+            counterSuccess != 0 &&
+            counterSuccess + counterFailure == this.maxWorkers
+          ) {
+            resolve()
+          }
+        })
+
         worker.once(
           'online',
           (index => () => {
@@ -179,14 +197,7 @@ class WorkerPool {
               // @ts-ignore
               this.workers[index].worker.removeAllListeners()
 
-              counterSuccess++
-
-              // if there's at least one working thread, go ahead
-              if (
-                counterSuccess > 0 &&
-                counterSuccess + counterFailure === this.maxWorkers
-              )
-                resolve()
+              event.emit('spawning', true)
             })
           })(i)
         )
@@ -198,13 +209,7 @@ class WorkerPool {
             this.workers[index].status = WORKER_STATE_OFF
             // @ts-ignore
             this.workers[index].worker.removeAllListeners()
-            counterFailure++
-
-            // stop the worker pool if no worker is spawned
-            if (counterFailure === this.maxWorkers) {
-              this.state = WORKER_POOL_STATE_OFF
-              reject(error)
-            }
+            event.emit('spawning', false, error)
           })(i)
         )
       }
