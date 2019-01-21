@@ -161,29 +161,30 @@ class WorkerPool {
       }
       let counterSuccess = 0
       let counterFailure = 0
+
+      const checker = new EventEmitter()
+      checker.on('spawning', (isSuccess, ErrorReason) => {
+        if (isSuccess) {
+          ++counterSuccess
+        } else {
+          ++counterFailure
+        }
+        if (counterFailure == this.maxWorkers) {
+          reject(ErrorReason)
+        } else if (
+          counterSuccess != 0 &&
+          counterSuccess + counterFailure == this.maxWorkers
+        ) {
+          resolve()
+        }
+      })
+
       for (let i = 0; i < this.maxWorkers; i++) {
         const worker = new Worker(`${__dirname}/worker.js`)
 
         this.workers.push({
           status: WORKER_STATE_SPAWNING,
           worker
-        })
-
-        const event = new EventEmitter()
-        event.on('spawning', (isSuccess, ErrorReason) => {
-          if (isSuccess) {
-            ++counterSuccess
-          } else {
-            ++counterFailure
-          }
-          if (counterFailure == this.maxWorkers) {
-            reject(ErrorReason)
-          } else if (
-            counterSuccess != 0 &&
-            counterSuccess + counterFailure == this.maxWorkers
-          ) {
-            resolve()
-          }
         })
 
         worker.once(
@@ -197,7 +198,7 @@ class WorkerPool {
               // @ts-ignore
               this.workers[index].worker.removeAllListeners()
 
-              event.emit('spawning', true)
+              checker.emit('spawning', true)
             })
           })(i)
         )
@@ -209,7 +210,7 @@ class WorkerPool {
             this.workers[index].status = WORKER_STATE_OFF
             // @ts-ignore
             this.workers[index].worker.removeAllListeners()
-            event.emit('spawning', false, error)
+            checker.emit('spawning', false, error)
           })(i)
         )
       }
