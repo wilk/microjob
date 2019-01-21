@@ -155,6 +155,9 @@ class WorkerPool {
 
   setup(): Promise<void> {
     return new Promise((resolve, reject) => {
+      if (this.workers.length == this.maxWorkers) {
+        return resolve()
+      }
       let counterSuccess = 0
       let counterFailure = 0
       for (let i = 0; i < this.maxWorkers; i++) {
