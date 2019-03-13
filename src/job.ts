@@ -22,5 +22,5 @@ export function job<T>(
   })
 }
 
-export const stop = workerPool.teardown.bind(workerPool)
-export const start = workerPool.setup.bind(workerPool)
+export const stop: () => Promise<void> = workerPool.teardown.bind(workerPool)
+export const start: () => Promise<void> = workerPool.setup.bind(workerPool)
