@@ -3,7 +3,7 @@ import { Worker } from 'worker_threads'
 import v8 from 'v8'
 import os from 'os'
 import path from 'path'
-import { Task, WorkerWrapper } from './interfaces'
+import { Task, WorkerWrapper, SetupConfig } from './interfaces'
 
 const WORKER_STATE_READY = 'ready'
 const WORKER_STATE_SPAWNING = 'spawning'
@@ -14,11 +14,10 @@ const WORKER_POOL_STATE_ON = 'on'
 const WORKER_POOL_STATE_OFF = 'off'
 
 class WorkerPool {
+  private maxWorkers = os.cpus().length > 10 ? 10 : os.cpus().length
   private taskQueue: Task[] = []
   private workers: WorkerWrapper[] = []
   private state = WORKER_POOL_STATE_ON
-
-  constructor(private maxWorkers: number) {}
 
   resurrect(deadWorker: WorkerWrapper): void {
     // self healing procedure
@@ -153,7 +152,10 @@ class WorkerPool {
     }
   }
 
-  setup(): Promise<void> {
+  setup(config: SetupConfig = { maxWorkers: os.cpus().length > 10 ? 10 : os.cpus().length }): Promise<void> {
+    const maxWorkersFallback = os.cpus().length > 10 ? 10 : os.cpus().length
+    this.maxWorkers = config.maxWorkers > 0 && config.maxWorkers < 11 ? config.maxWorkers : maxWorkersFallback
+
     return new Promise((resolve, reject) => {
       let counterSuccess = 0
       let counterFailure = 0
@@ -226,6 +228,4 @@ class WorkerPool {
   }
 }
 
-export default new WorkerPool(
-  parseInt(process.env.MAX_WORKERS) || os.cpus().length
-)
+export default new WorkerPool()

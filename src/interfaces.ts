@@ -22,3 +22,7 @@ export interface WorkerResponse<T = {}> {
   }
   data: T
 }
+
+export interface SetupConfig {
+  maxWorkers: number
+}
