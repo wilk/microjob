@@ -13,8 +13,10 @@ const WORKER_STATE_OFF = 'off'
 const WORKER_POOL_STATE_ON = 'on'
 const WORKER_POOL_STATE_OFF = 'off'
 
+const AVAILABLE_CPUS = os.cpus().length
+
 class WorkerPool {
-  private maxWorkers = os.cpus().length > 10 ? 10 : os.cpus().length
+  private maxWorkers = AVAILABLE_CPUS
   private taskQueue: Task[] = []
   private workers: WorkerWrapper[] = []
   private state = WORKER_POOL_STATE_ON
@@ -152,9 +154,10 @@ class WorkerPool {
     }
   }
 
-  setup(config: SetupConfig = { maxWorkers: os.cpus().length > 10 ? 10 : os.cpus().length }): Promise<void> {
-    const maxWorkersFallback = os.cpus().length > 10 ? 10 : os.cpus().length
-    this.maxWorkers = config.maxWorkers > 0 && config.maxWorkers < 11 ? config.maxWorkers : maxWorkersFallback
+  setup(config: SetupConfig = { maxWorkers: AVAILABLE_CPUS }): Promise<void> {
+    this.maxWorkers = config.maxWorkers > 0 ? config.maxWorkers : AVAILABLE_CPUS
+
+    if (this.maxWorkers > 10) console.warn(`Worker pool has too many workers.\nThis may lead to a memory leak.\nLimit them with start({maxWorkers: 10})`)
 
     return new Promise((resolve, reject) => {
       let counterSuccess = 0
