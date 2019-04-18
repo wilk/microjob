@@ -10,10 +10,10 @@ This documentation helps using `microjob` with ease, involving simple and quick 
 
 microjob implements the [Thread Pool pattern](https://en.wikipedia.org/wiki/Thread_pool), called worker pool.
 The worker pool spawns a set of threads, default equals to the number of cpus.
-It can be tuned with the environment variable `MAX_WORKERS`:
+It can be tuned with the config variable inside the start API:
 
-```bash
-$ export MAX_WORKERS=10; node --experimental-worker index.js
+```js
+await start({ maxWorkers: 10 })
 ```
 
 Invoking `job` on a function will put it on a task queue and then, when a worker is available, it will be executed, returning the desired result or an error.
@@ -40,7 +40,7 @@ Before working with microjob you need to boot the worker pool:
 
   try {
     // start worker pool
-    await start();
+    await start({ maxWorkers: 4 }); // you can also limit the available workers
 
     // ...
   } catch (err) {

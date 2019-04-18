@@ -186,8 +186,8 @@
 <p><a href="https://en.wikipedia.org/wiki/Thread_pool#/media/File:Thread_pool.svg" target="_blank">Image taken from Wikipedia</a></p>
 <p>microjob implements the <a href="https://en.wikipedia.org/wiki/Thread_pool" target="_blank">Thread Pool pattern</a>, called worker pool.
 The worker pool spawns a set of threads, default equals to the number of cpus.
-It can be tuned with the environment variable <code>MAX_WORKERS</code>:</p>
-<pre><code class="lang-bash">$ <span class="hljs-built_in">export</span> MAX_WORKERS=10; node --experimental-worker index.js
+It can be tuned with the config variable inside the start API:</p>
+<pre><code class="lang-js"><span class="hljs-keyword">await</span> start({ maxWorkers: <span class="hljs-number">10</span> })
 </code></pre>
 <p>Invoking <code>job</code> on a function will put it on a task queue and then, when a worker is available, it will be executed, returning the desired result or an error.</p>
 <h3 id="auto-self-healing">Auto self-healing</h3>
@@ -206,7 +206,7 @@ It can be tuned with the environment variable <code>MAX_WORKERS</code>:</p>
 
   <span class="hljs-keyword">try</span> {
     <span class="hljs-comment">// start worker pool</span>
-    <span class="hljs-keyword">await</span> start();
+    <span class="hljs-keyword">await</span> start({ maxWorkers: <span class="hljs-number">4</span> }); <span class="hljs-comment">// you can also limit the available workers</span>
 
     <span class="hljs-comment">// ...</span>
   } <span class="hljs-keyword">catch</span> (err) {
@@ -406,7 +406,7 @@ So it&apos;s not possible to pass custom class instances nor native class instan
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Guide","level":"1.1.1","depth":2,"next":{"title":"API","level":"1.1.2","depth":2,"path":"API.md","ref":"API.md","articles":[]},"previous":{"title":"Introduction","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[{"title":"Guide","level":"1.1.1","depth":2,"path":"GUIDE.md","ref":"GUIDE.md","articles":[]},{"title":"API","level":"1.1.2","depth":2,"path":"API.md","ref":"API.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"GUIDE.md","mtime":"2018-11-13T10:19:21.059Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-11-13T11:31:26.418Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Guide","level":"1.1.1","depth":2,"next":{"title":"API","level":"1.1.2","depth":2,"path":"API.md","ref":"API.md","articles":[]},"previous":{"title":"Introduction","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[{"title":"Guide","level":"1.1.1","depth":2,"path":"GUIDE.md","ref":"GUIDE.md","articles":[]},{"title":"API","level":"1.1.2","depth":2,"path":"API.md","ref":"API.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"GUIDE.md","mtime":"2019-04-18T05:45:44.085Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-04-18T05:47:12.791Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

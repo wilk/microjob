@@ -35,7 +35,15 @@ const {start} = require('microjob')
 Its signature:
 
 ```ts
-function start(): Promise<void>;
+function start(config: SetupConfig): Promise<void>;
+```
+
+**SetupConfig** is defined as an object:
+
+```ts
+SetupConfig {
+  maxWorkers?: number
+}
 ```
 
 To know how to use it, please refer to the [Setup Guide](GUIDE.md#setup)

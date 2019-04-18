@@ -16,3 +16,4 @@ coverage
 .env.local
 .vscode
 .grenrc.yml
+.nvmrc

@@ -24,5 +24,5 @@ export interface WorkerResponse<T = {}> {
 }
 
 export interface SetupConfig {
-  maxWorkers: number
+  maxWorkers?: number
 }
