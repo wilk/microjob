@@ -157,7 +157,7 @@ class WorkerPool {
   setup(config: SetupConfig = { maxWorkers: AVAILABLE_CPUS }): Promise<void> {
     this.maxWorkers = config.maxWorkers > 0 ? config.maxWorkers : AVAILABLE_CPUS
 
-    if (this.maxWorkers > 10) console.warn(`Worker pool has too many workers.\nThis may lead to a memory leak.\nLimit them with start({maxWorkers: 10})`)
+    if (this.maxWorkers > 10) console.warn(`Worker pool has more than 10 workers.\nYou should also increase the Max Listeners of Node.js (https://nodejs.org/docs/latest/api/events.html#events_emitter_setmaxlisteners_n)\nOtherwise, limit them with start({maxWorkers: 10})`)
 
     return new Promise((resolve, reject) => {
       let counterSuccess = 0
