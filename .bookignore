@@ -16,3 +16,5 @@ tslint.json
 .bookignore
 .grenrc.yml
 .nvmrc
+.env
+.env.sample
