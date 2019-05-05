@@ -1,5 +1,6 @@
 import workerPool from './worker-pool'
 import { Config } from './interfaces'
+import { SetupConfig } from './interfaces'
 
 const MISSING_HANDLER_ERROR = `job needs a function.\nTry with:\n> job(() => {...}, config)`
 const WRONG_CONTEXT_ERROR = `job needs an object as ctx.\nTry with:\n> job(() => {...}, {ctx: {...}})`
@@ -23,4 +24,4 @@ export function job<T>(
 }
 
 export const stop: () => Promise<void> = workerPool.teardown.bind(workerPool)
-export const start: () => Promise<void> = workerPool.setup.bind(workerPool)
+export const start: (config?: SetupConfig) => Promise<void> = workerPool.setup.bind(workerPool)
