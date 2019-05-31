@@ -62,3 +62,31 @@ function stop(): Promise<void>;
 ```
 
 To know how to use it, please refer to the [Teardown Guide](GUIDE.md#forceful-shutdown)
+
+## workers
+**workers** can be required directly from microjob:
+
+```js
+const {workers} = require('microjob')
+```
+
+It's defined as an array of workers:
+
+```ts
+workers: WorkerWrapper[];
+```
+
+## kill
+**kill** can be required directly from microjob:
+
+```js
+const {kill} = require('microjob')
+```
+
+It's a function with this signature:
+
+```ts
+function kill(worker: WorkerWrapper): Promise<void>;
+```
+
+You can use it to directly terminate a specific worker.

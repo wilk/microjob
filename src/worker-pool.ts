@@ -18,7 +18,7 @@ const AVAILABLE_CPUS = os.cpus().length
 class WorkerPool {
   private maxWorkers = AVAILABLE_CPUS
   private taskQueue: Task[] = []
-  private workers: WorkerWrapper[] = []
+  public workers: WorkerWrapper[] = []
   private state = WORKER_POOL_STATE_ON
 
   resurrect(deadWorker: WorkerWrapper): void {
@@ -128,7 +128,17 @@ class WorkerPool {
         this.tick()
       })
 
-      worker.postMessage(workerStr)
+      // Recover from an internal error
+      try {
+        worker.postMessage(workerStr)
+      } catch (error) {
+        availableWorker.status = WORKER_STATE_OFF
+        // @ts-ignore
+        availableWorker.worker.removeAllListeners()
+        this.tick()
+        reject(error)
+      }
+
     } catch (err) {
       this.free(worker)
       reject(err)
@@ -227,6 +237,14 @@ class WorkerPool {
           }
         })
       }
+    })
+  }
+
+  kill(worker: WorkerWrapper): Promise<void> {
+    return new Promise(resolve => {
+      worker.status = WORKER_STATE_OFF
+      // @ts-ignore
+      worker.worker.terminate(resolve)
     })
   }
 }

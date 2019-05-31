@@ -17,7 +17,8 @@
     "lint": "tslint src/**/*.ts __tests__/**/*.ts",
     "prerelease": "npm run lint; npm test; npm run build; npm run docs",
     "report-coverage": "node --experimental-worker node_modules/.bin/jest --coverage && cat ./coverage/lcov.info | coveralls",
-    "rel": "gren release"
+    "rel": "gren release",
+    "prepare": "npm run build"
   },
   "engines": {
     "node": ">=10.5.0",
