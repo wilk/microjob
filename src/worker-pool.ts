@@ -75,6 +75,7 @@ class WorkerPool {
     availableWorker.status = WORKER_STATE_BUSY
     const { worker } = availableWorker
     const { handler, config, resolve, reject } = work
+    availableWorker.props = config.props
 
     try {
       let variables = ''
@@ -177,7 +178,8 @@ class WorkerPool {
 
         this.workers.push({
           status: WORKER_STATE_SPAWNING,
-          worker
+          worker,
+          props: {}
         })
 
         worker.once(

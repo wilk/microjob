@@ -17,9 +17,10 @@ function job<T>(handler: <T>(data?: any) => void, config?: Config): Promise<T>;
 **Config** is defined as an object:
 
 ```ts
-Config<T = {}, U = {}> {
+Config<T = {}, U = {}, C = {}> {
   ctx?: T
   data?: U
+  props?: C
 }
 ```
 

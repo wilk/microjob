@@ -1,6 +1,7 @@
-export interface Config<T = {}, U = {}> {
+export interface Config<T = {}, U = {}, C = {}> {
   ctx?: T
-  data?: U
+  data?: U,
+  props?: C
 }
 
 export interface Task {
@@ -12,7 +13,8 @@ export interface Task {
 
 export interface WorkerWrapper {
   status: string
-  worker: Worker
+  worker: Worker,
+  props: any
 }
 
 export interface WorkerResponse<T = {}> {

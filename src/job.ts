@@ -7,7 +7,7 @@ const WRONG_CONTEXT_ERROR = `job needs an object as ctx.\nTry with:\n> job(() =>
 
 export function job<T>(
   handler: <T>(data?: any) => void,
-  config: Config = { ctx: {}, data: {} }
+  config: Config = { ctx: {}, data: {}, props: {} }
 ): Promise<T> {
   return new Promise((resolve, reject) => {
     if (typeof handler !== 'function')
@@ -15,6 +15,7 @@ export function job<T>(
 
     config.ctx = config.ctx || {}
     config.data = config.data || {}
+    config.props = config.props || {}
 
     if (typeof config.ctx !== 'object')
       return reject(new Error(WRONG_CONTEXT_ERROR))
