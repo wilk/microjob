@@ -213,21 +213,15 @@ class WorkerPool {
     })
   }
 
-  teardown(): Promise<void> {
-    return new Promise(resolve => {
-      let counter = 0
-      for (let i = 0; i < this.workers.length; i++) {
-        // @ts-ignore
-        this.workers[i].worker.terminate(() => {
-          counter++
-          if (counter === this.workers.length) {
-            this.state = WORKER_POOL_STATE_OFF
-            this.workers = []
-            resolve()
-          }
-        })
+  teardown(): Promise<void[]> {
+      const terminationPromises = []
+
+      for (const {worker} of this.workers) {
+          // @ts-ignore
+          terminationPromises.push(worker.terminate())
       }
-    })
+
+      return Promise.all(terminationPromises)
   }
 }
 
