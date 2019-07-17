@@ -10,16 +10,12 @@ const WORKER_STATE_SPAWNING = 'spawning'
 const WORKER_STATE_BUSY = 'busy'
 const WORKER_STATE_OFF = 'off'
 
-const WORKER_POOL_STATE_ON = 'on'
-const WORKER_POOL_STATE_OFF = 'off'
-
 const AVAILABLE_CPUS = os.cpus().length
 
 class WorkerPool {
   private maxWorkers = AVAILABLE_CPUS
   private taskQueue: Task[] = []
   private workers: WorkerWrapper[] = []
-  private state = WORKER_POOL_STATE_ON
 
   resurrect(deadWorker: WorkerWrapper): void {
     // self healing procedure
@@ -204,7 +200,6 @@ class WorkerPool {
 
             // stop the worker pool if no worker is spawned
             if (counterFailure === this.maxWorkers) {
-              this.state = WORKER_POOL_STATE_OFF
               reject(error)
             }
           })(i)
@@ -213,15 +208,16 @@ class WorkerPool {
     })
   }
 
-  teardown(): Promise<void[]> {
-      const terminationPromises = []
+  async teardown(): Promise<void> {
+    const terminationPromises = []
 
-      for (const {worker} of this.workers) {
-          // @ts-ignore
-          terminationPromises.push(worker.terminate())
-      }
+    for (const { worker } of this.workers) {
+      // @ts-ignore
+      terminationPromises.push(worker.terminate())
+    }
 
-      return Promise.all(terminationPromises)
+    await Promise.all(terminationPromises)
+    this.workers = []
   }
 }
 
