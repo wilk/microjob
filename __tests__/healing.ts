@@ -20,7 +20,7 @@ const parentPort = new ParentPortMock()
 let workersCounter = 0
 
 // mock of Worker thread
-export class WorkerMock extends EventEmitter {
+class WorkerMock extends EventEmitter {
   constructor(private file: string) {
     super()
     workersCounter++
@@ -29,9 +29,9 @@ export class WorkerMock extends EventEmitter {
     require(file)
 
     // emit an error when something is sent from the worker
-    parentPort.on('fake message', () =>
+    parentPort.on('fake message', () => {
       this.emit('error', new Error(FAKE_ERROR_MESSAGE))
-    )
+    })
 
     setTimeout(() => this.emit('online'), 250)
   }
@@ -41,9 +41,7 @@ export class WorkerMock extends EventEmitter {
     parentPort.emit('message', message)
   }
 
-  terminate(): Promise<void[]> {
-    return Promise.resolve([])
-  }
+  async terminate(): Promise<void> { }
 }
 
 // mock worker_threads
@@ -67,7 +65,7 @@ describe('Self-Healing Testing', () => {
     try {
       res = await job(() => {
         let i = 0
-        for (i = 0; i < 1000000; i++) {}
+        for (i = 0; i < 1000000; i++) { }
 
         return i
       })

@@ -21,7 +21,7 @@ let workersCounter = 0
 const mockCallback = jest.fn()
 
 // mock of Worker thread
-export class WorkerMock extends EventEmitter {
+class WorkerMock extends EventEmitter {
   constructor(private file: string) {
     super()
     workersCounter++
@@ -47,9 +47,7 @@ export class WorkerMock extends EventEmitter {
     parentPort.emit('message', message)
   }
 
-  terminate(): Promise<void[]> {
-    return Promise.resolve([])
-  }
+  async terminate(): Promise<void> { }
 }
 
 // mock worker_threads
@@ -73,7 +71,7 @@ describe('Fail Testing', () => {
       await start()
       res = await job(() => {
         let i = 0
-        for (i = 0; i < 1000000; i++) {}
+        for (i = 0; i < 1000000; i++) { }
 
         return i
       })
