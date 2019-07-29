@@ -12,6 +12,11 @@ const WORKER_STATE_OFF = 'off'
 
 const AVAILABLE_CPUS = os.cpus().length
 
+// calculated for teardown method
+const NODE_VERSION_SPLIT = process.version.replace('v', '').split('.')
+const NODE_VERSION_MAJOR = parseInt(NODE_VERSION_SPLIT[0])
+const NODE_VERSION_MINOR = parseInt(NODE_VERSION_SPLIT[1])
+
 class WorkerPool {
   private maxWorkers = AVAILABLE_CPUS
   private taskQueue: Task[] = []
@@ -209,15 +214,33 @@ class WorkerPool {
   }
 
   async teardown(): Promise<void> {
-    const terminationPromises = []
+    if (NODE_VERSION_MAJOR >= 12 && NODE_VERSION_MINOR >= 5) {
+      const terminationPromises = []
 
-    for (const { worker } of this.workers) {
-      // @ts-ignore
-      terminationPromises.push(worker.terminate())
+      for (const { worker } of this.workers) {
+        // @ts-ignore
+        terminationPromises.push(worker.terminate())
+      }
+
+      await Promise.all(terminationPromises)
+      this.workers = []
+    } else {
+      const promise = new Promise(resolve => {
+        let counter = 0
+        for (let i = 0; i < this.workers.length; i++) {
+          // @ts-ignore
+          this.workers[i].worker.terminate(() => {
+            counter++
+            if (counter === this.workers.length) {
+              this.workers = []
+              resolve()
+            }
+          })
+        }
+      })
+
+      await promise
     }
-
-    await Promise.all(terminationPromises)
-    this.workers = []
   }
 }
 
