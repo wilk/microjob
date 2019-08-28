@@ -1,6 +1,7 @@
 export interface Config<T = {}, U = {}> {
   ctx?: T
   data?: U
+  persistentCtx?: any
 }
 
 export interface Task {
