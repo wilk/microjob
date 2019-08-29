@@ -1,3 +1,5 @@
+import { Worker } from 'worker_threads'
+
 export interface Config<T = {}, U = {}, C = {}> {
   ctx?: T
   data?: U,

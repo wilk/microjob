@@ -41,8 +41,8 @@ export class WorkerMock extends EventEmitter {
     parentPort.emit('message', message)
   }
 
-  terminate(cb: Function): void {
-    cb()
+  terminate(): Promise<void[]> {
+    return Promise.resolve([])
   }
 }
 

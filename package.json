@@ -1,6 +1,6 @@
 {
   "name": "microjob",
-  "version": "0.5.2",
+  "version": "0.6.1",
   "description": "A tiny wrapper for Node.js worker_threads lib",
   "main": "dist/job.js",
   "types": "dist/job.d.ts",
@@ -9,20 +9,20 @@
     "copy-assets": "cp src/worker.js dist",
     "clean": "rm -rf dist",
     "pretest": "npm run lint",
-    "test": "node --experimental-worker node_modules/.bin/jest --detectOpenHandles",
-    "test:coverage": "node --experimental-worker node_modules/.bin/jest --coverage",
-    "test:watch": "node --experimental-worker node_modules/.bin/jest --watchAll",
+    "test": "jest --detectOpenHandles",
+    "test:coverage": "jest --coverage",
+    "test:watch": "jest --watchAll",
     "docs": "gitbook build . docs",
     "serve-docs": "gitbook serve",
     "lint": "tslint src/**/*.ts __tests__/**/*.ts",
     "prerelease": "npm run lint; npm test; npm run build; npm run docs",
-    "report-coverage": "node --experimental-worker node_modules/.bin/jest --coverage && cat ./coverage/lcov.info | coveralls",
+    "report-coverage": "jest --coverage && cat ./coverage/lcov.info | coveralls",
     "rel": "gren release",
     "prepare": "npm run build"
   },
   "engines": {
-    "node": ">=10.5.0",
-    "npm": ">= 6.0.0"
+    "node": ">=12.6.0",
+    "npm": ">= 6.9.0"
   },
   "repository": {
     "type": "git",
