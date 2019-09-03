@@ -1,5 +1,7 @@
 const { parentPort } = require('worker_threads')
 
+let persistentCtx = {}
+
 parentPort.on('message', async worker => {
   const response = {
     error: null,
@@ -9,7 +11,8 @@ parentPort.on('message', async worker => {
   try {
     eval(worker)
     // __executor__ is defined in worker
-    response.data = await __executor__()
+    Object.assign(persistentCtx, __executor__.persistentCtx)
+    response.data = await __executor__(persistentCtx)
     parentPort.postMessage(response)
   } catch (err) {
     response.data = null

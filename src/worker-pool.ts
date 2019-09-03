@@ -99,8 +99,9 @@ class WorkerPool {
       // @ts-ignore
       const dataSerialized = v8.serialize(config.data)
       const dataStr = JSON.stringify(dataSerialized)
+      const persistentCtxStr = JSON.stringify(config.persistentCtx || {})
       const workerStr = `
-      async function __executor__() {
+      async function __executor__(persistentCtx) {
         const v8 = require('v8')
         ${variables}
         const dataParsed = JSON.parse('${dataStr}')
@@ -108,6 +109,8 @@ class WorkerPool {
         const dataDeserialized = v8.deserialize(dataBuffer)
         return await (${handler.toString()})(dataDeserialized)
       }
+
+      __executor__.persistentCtx = JSON.parse('${persistentCtxStr}')
       `
 
       // @ts-ignore
