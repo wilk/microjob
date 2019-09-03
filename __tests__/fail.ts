@@ -47,7 +47,9 @@ class WorkerMock extends EventEmitter {
     parentPort.emit('message', message)
   }
 
-  async terminate(): Promise<void> { }
+  async terminate(cb: Function = () => { }): Promise<void> {
+    return cb()
+  }
 }
 
 // mock worker_threads
@@ -56,14 +58,16 @@ const mock = jest.mock('worker_threads', () => ({
   parentPort
 }))
 
-import { job, stop, start } from '../src/job'
-
-afterAll(async () => await stop())
-// restore original worker_threads module
-afterAll(() => mock.restoreAllMocks())
+afterAll(async () => {
+  const { stop } = require('../src/job')
+  await stop()
+  // restore original worker_threads module
+  mock.restoreAllMocks()
+})
 
 describe('Fail Testing', () => {
-  it('should not resurrect a broken dead worker', async done => {
+  const { job, start } = require('../src/job')
+  it('should not resurrect a broken dead worker', async () => {
     let error
     let res
 
@@ -79,15 +83,15 @@ describe('Fail Testing', () => {
       error = err
     }
 
-    setTimeout(() => {
-      expect(res).toBeUndefined()
-      expect(error).toBeDefined()
-      expect(error.message).toBe(FAKE_ERROR_MESSAGE)
-      // if a dead worker has been resurrected, then the workersCounter must be greater
-      // than the MAX_THREADS const
-      expect(mockCallback).toBeCalled()
+    return new Promise(resolve => {
+      setTimeout(() => {
+        expect(res).toBeUndefined()
+        expect(error).toBeDefined()
+        expect(error.message).toBe(FAKE_ERROR_MESSAGE)
+        expect(mockCallback).toBeCalled()
 
-      done()
-    }, 500)
+        resolve()
+      }, 500)
+    })
   })
 })
