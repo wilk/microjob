@@ -10,6 +10,7 @@
     "clean": "rm -rf dist",
     "pretest": "npm run lint",
     "test": "node --experimental-worker node_modules/.bin/jest --detectOpenHandles",
+    "test:verbose": "node --experimental-worker node_modules/.bin/jest --detectOpenHandles --verbose=true",
     "test:coverage": "node --experimental-worker node_modules/.bin/jest --coverage",
     "test:watch": "node --experimental-worker node_modules/.bin/jest --watchAll",
     "docs": "gitbook build . docs",
