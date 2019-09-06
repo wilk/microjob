@@ -1,16 +1,11 @@
-// @ts-ignore
 import { Worker } from 'worker_threads'
-import v8 from 'v8'
-import os from 'os'
-import path from 'path'
+// @ts-ignore
+import { serialize } from 'v8'
+import { cpus } from 'os'
 import { Task, WorkerWrapper, SetupConfig } from './interfaces'
+import { workerFile } from './worker'
 
-const WORKER_STATE_READY = 'ready'
-const WORKER_STATE_SPAWNING = 'spawning'
-const WORKER_STATE_BUSY = 'busy'
-const WORKER_STATE_OFF = 'off'
-
-const AVAILABLE_CPUS = os.cpus().length
+const AVAILABLE_CPUS = cpus().length
 
 // calculated for teardown method
 const NODE_VERSION_SPLIT = process.version.replace('v', '').split('.')
@@ -24,18 +19,17 @@ class WorkerPool {
 
   resurrect(deadWorker: WorkerWrapper): void {
     // self healing procedure
-    const worker = new Worker(path.resolve(__dirname, './worker.js'))
+    const worker = new Worker(workerFile, { eval: true })
 
-    deadWorker.status = WORKER_STATE_SPAWNING
+    deadWorker.status = 'spawning'
     deadWorker.worker = worker
 
     worker.once('online', () =>
       // next tick, so the worker js gets interpreted
       process.nextTick(() => {
-        deadWorker.status = WORKER_STATE_READY
+        deadWorker.status = 'ready'
 
         // remove previous listeners, like the startup error handler
-        // @ts-ignore
         worker.removeAllListeners()
 
         this.tick()
@@ -45,8 +39,7 @@ class WorkerPool {
     // startup error handler: should not be thrown or at least handled
     worker.once('error', (error: Error) => {
       console.error(error)
-      deadWorker.status = WORKER_STATE_OFF
-      // @ts-ignore
+      deadWorker.status = 'off'
       worker.removeAllListeners()
 
       this.tick()
@@ -56,14 +49,14 @@ class WorkerPool {
   tick(): void {
     // check for dead threads and resurrect them
     this.workers
-      .filter(({ status }) => status === WORKER_STATE_OFF)
+      .filter(({ status }) => status === 'off')
       .forEach((deadWorker: WorkerWrapper) => this.resurrect(deadWorker))
 
     if (this.taskQueue.length === 0) return
 
     let availableWorker: WorkerWrapper
     for (let i = 0; i < this.workers.length; i++) {
-      if (this.workers[i].status === WORKER_STATE_READY) {
+      if (this.workers[i].status === 'ready') {
         availableWorker = this.workers[i]
         break
       }
@@ -73,7 +66,7 @@ class WorkerPool {
 
     const work = this.taskQueue.shift()
 
-    availableWorker.status = WORKER_STATE_BUSY
+    availableWorker.status = 'busy'
     const { worker } = availableWorker
     const { handler, config, resolve, reject } = work
 
@@ -96,8 +89,7 @@ class WorkerPool {
         variables += `let ${key} = ${variable}\n`
       }
 
-      // @ts-ignore
-      const dataSerialized = v8.serialize(config.data)
+      const dataSerialized = serialize(config.data)
       const dataStr = JSON.stringify(dataSerialized)
       const workerStr = `
       async function __executor__() {
@@ -110,8 +102,7 @@ class WorkerPool {
       }
       `
 
-      // @ts-ignore
-      worker.once('message', (message: any) => {
+      worker.once('message', (message) => {
         this.free(worker)
 
         if (typeof message.error === 'undefined' || message.error === null)
@@ -122,9 +113,8 @@ class WorkerPool {
         reject(error)
       })
 
-      // @ts-ignore
-      worker.once('error', (error: Error) => {
-        availableWorker.status = WORKER_STATE_OFF
+      worker.once('error', (error) => {
+        availableWorker.status = 'off'
         reject(error)
         this.tick()
       })
@@ -143,11 +133,9 @@ class WorkerPool {
 
   free(worker: any): void {
     for (let i = 0; i < this.workers.length; i++) {
-      // @ts-ignore
       if (worker.threadId === this.workers[i].worker.threadId) {
-        this.workers[i].status = WORKER_STATE_READY
+        this.workers[i].status = 'ready'
         // remove previous listeners
-        // @ts-ignore
         this.workers[i].worker.removeAllListeners()
         this.tick()
         break
@@ -164,10 +152,10 @@ class WorkerPool {
       let counterSuccess = 0
       let counterFailure = 0
       for (let i = 0; i < this.maxWorkers; i++) {
-        const worker = new Worker(`${__dirname}/worker.js`)
+        const worker = new Worker(workerFile, { eval: true })
 
         this.workers.push({
-          status: WORKER_STATE_SPAWNING,
+          status: 'spawning',
           worker
         })
 
@@ -176,10 +164,9 @@ class WorkerPool {
           (index => () => {
             // next tick, so the worker js gets interpreted
             process.nextTick(() => {
-              this.workers[index].status = WORKER_STATE_READY
+              this.workers[index].status = 'ready'
 
               // remove previous listeners, like the startup error handler
-              // @ts-ignore
               this.workers[index].worker.removeAllListeners()
 
               counterSuccess++
@@ -198,8 +185,7 @@ class WorkerPool {
         worker.once(
           'error',
           (index => (error: Error) => {
-            this.workers[index].status = WORKER_STATE_OFF
-            // @ts-ignore
+            this.workers[index].status = 'off'
             this.workers[index].worker.removeAllListeners()
             counterFailure++
 
@@ -218,7 +204,6 @@ class WorkerPool {
       const terminationPromises = []
 
       for (const { worker } of this.workers) {
-        // @ts-ignore
         terminationPromises.push(worker.terminate())
       }
 
@@ -228,7 +213,6 @@ class WorkerPool {
       const promise = new Promise(resolve => {
         let counter = 0
         for (let i = 0; i < this.workers.length; i++) {
-          // @ts-ignore
           this.workers[i].worker.terminate(() => {
             counter++
             if (counter === this.workers.length) {

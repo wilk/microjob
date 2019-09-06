@@ -1,3 +1,4 @@
+export const workerFile = `
 const { parentPort } = require('worker_threads')
 
 parentPort.on('message', async worker => {
@@ -25,3 +26,4 @@ parentPort.on('message', async worker => {
     }
   }
 })
+`
