@@ -1,3 +1,5 @@
+import { Worker } from 'worker_threads'
+
 export interface Config<T = {}, U = {}> {
   ctx?: T
   data?: U
@@ -10,8 +12,10 @@ export interface Task {
   reject: Function
 }
 
+export type WorkerState = 'ready' | 'spawning' | 'busy' | 'off'
+
 export interface WorkerWrapper {
-  status: string
+  status: WorkerState
   worker: Worker
 }
 
