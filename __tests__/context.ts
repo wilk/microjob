@@ -8,7 +8,7 @@ describe('Job Context Testing', () => {
     let error
     let res
 
-    class Foo {}
+    class Foo { }
 
     const ctx = {
       hello: 'world',
@@ -16,14 +16,16 @@ describe('Job Context Testing', () => {
       numb: 10,
       bool: true,
       obj: {
-        nested: 'deep' /*,
-        date: new Date()*/
+        nested: 'deep'
       },
-      // date: new Date(),
       arr: [10, 20, 'meh'],
       myClass: Foo,
       myInstance: new Foo()
     }
+
+    // foreignKey is used to increase the test coverage
+    // @ts-ignore
+    ctx.__proto__.foreignKey = 'test'
 
     try {
       // @ts-ignore
@@ -56,7 +58,7 @@ describe('Job Context Testing', () => {
         }
         return sum
       },
-      fun: function() {
+      fun: function () {
         let sum = 0
         for (let i = 0; i < 1000; i++) {
           sum += i
@@ -74,33 +76,5 @@ describe('Job Context Testing', () => {
 
     expect(error).toBeUndefined()
     expect(res).toEqual([499500, 499500])
-  })
-
-  // todo: implement instance serialization
-  xit('should execute a an inline job passing object instances to context', async () => {
-    let error
-    let res
-
-    class Person {
-      constructor(private name, private surname) {}
-
-      fullname() {
-        return `${this.name} ${this.surname}`
-      }
-    }
-
-    const ctx = {
-      foo: new Person('foo', 'bar')
-    }
-
-    try {
-      // @ts-ignore
-      res = await job(() => foo.fullname(), { ctx })
-    } catch (err) {
-      error = err
-    }
-
-    expect(error).toBeUndefined()
-    expect(res).toEqual(ctx.foo.fullname())
   })
 })
