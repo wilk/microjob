@@ -26,8 +26,8 @@ class WorkerMock extends EventEmitter {
     super()
     workersCounter++
 
-    // interpret worker.js
-    require(file)
+    // interpret worker.js string
+    eval(file)
 
     // emit an error when something is sent from the worker
     parentPort.on('fake message', () =>
