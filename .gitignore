@@ -64,3 +64,5 @@ dist
 .vscode
 .env.local
 tsconfig.build.json
+examples/**/*.js
+src/**/*.js

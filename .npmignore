@@ -19,3 +19,4 @@ coverage
 .nvmrc
 .env
 .env.sample
+examples
