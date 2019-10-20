@@ -72,6 +72,7 @@
     "@types/jest": "^23.3.14",
     "@types/node": "^10.14.17",
     "coveralls": "^3.0.6",
+    "faker": "^4.1.0",
     "gitbook-cli": "^2.3.2",
     "github-release-notes": "^0.17.0",
     "jest": "^23.6.0",
