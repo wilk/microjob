@@ -124,7 +124,7 @@ class WorkerPool {
         this.tick()
       })
 
-      worker.postMessage(workerStr)
+      worker.postMessage({worker: workerStr, shared: config.shared})
     } catch (err) {
       this.free(worker)
       reject(err)
