@@ -77,4 +77,23 @@ describe('Job Context Testing', () => {
     expect(error).toBeUndefined()
     expect(res).toEqual([499500, 499500])
   })
+
+  it('should not allow arbitrary code execution in strings', async () => {
+    let error
+    let res
+
+    const evilString = '\';parentPort.postMessage({data: \"Hippity Hoppity, this program is now my property\"});\''
+
+    const ctx = { evilString }
+
+    try {
+      // @ts-ignore
+      res = await job(() => evilString, { ctx })
+    } catch (err) {
+      error = err
+    }
+
+    expect(error).toBeUndefined()
+    expect(res).toEqual(evilString)
+  })
 })
