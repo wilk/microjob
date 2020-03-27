@@ -83,8 +83,6 @@ class WorkerPool {
         let variable
         switch (typeof config.ctx[key]) {
           case 'string':
-            variable = `'${config.ctx[key]}'`
-            break
           case 'object':
             variable = JSON.stringify(config.ctx[key])
             break
