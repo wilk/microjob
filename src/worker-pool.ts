@@ -76,10 +76,7 @@ class WorkerPool {
     const { handler, config, resolve, reject } = work
 
     try {
-      let variables = ''
-      for (const key in config.ctx) {
-        if (!config.ctx.hasOwnProperty(key)) continue
-
+      const variables = Object.keys(config.ctx).reduce((acc, key) => {
         let variable
         switch (typeof config.ctx[key]) {
           case 'string':
@@ -89,19 +86,27 @@ class WorkerPool {
           default:
             variable = config.ctx[key]
         }
-        variables += `let ${key} = ${variable}\n`
-      }
+        acc += `${key}: ${variable},\n`
+        return acc
+      }, '')
+
+      const modules = Object.keys(config.modules).reduce((acc, mod) => {
+        acc += `${mod}: require('${config.modules[mod]}'),`
+        return acc
+      }, '')
 
       const dataSerialized = serialize(config.data)
       const dataStr = JSON.stringify(dataSerialized)
       const workerStr = `
       async function __executor__() {
-        const v8 = require('v8')
-        ${variables}
-        const dataParsed = JSON.parse('${dataStr}')
-        const dataBuffer = Buffer.from(dataParsed.data)
-        const dataDeserialized = v8.deserialize(dataBuffer)
-        return await (${handler.toString()})(dataDeserialized)
+        const v8 = require('v8');
+        const fs = require('fs');
+        const modules = {${modules}};
+        const ctx = {${variables}};
+        const dataParsed = JSON.parse('${dataStr}');
+        const dataBuffer = Buffer.from(dataParsed.data);
+        const data = v8.deserialize(dataBuffer);
+        return await (${handler.toString()})({data, ctx, modules});
       }
       `
 

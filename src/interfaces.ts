@@ -1,8 +1,9 @@
 import { Worker } from 'worker_threads'
 
-export interface Config<T = {}, U = {}> {
+export interface Config<T = {}, U = {}, Z = {}> {
   ctx?: T
   data?: U
+  modules: Z
 }
 
 export interface Task {
