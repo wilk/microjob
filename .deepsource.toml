@@ -1,0 +1,15 @@
+version = 1
+
+[[analyzers]]
+name = "javascript"
+enabled = true
+
+  [analyzers.meta]
+  environment = [
+    "nodejs",
+    "jest",
+    "browser",
+    "mocha"
+  ]
+  style_guide = "airbnb"
+  dialect = "typescript"
