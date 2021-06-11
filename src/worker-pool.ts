@@ -203,7 +203,7 @@ class WorkerPool {
   }
 
   async teardown(): Promise<void> {
-    if (NODE_VERSION_MAJOR >= 12 && NODE_VERSION_MINOR >= 5) {
+    if (NODE_VERSION_MAJOR > 12 || (NODE_VERSION_MAJOR >= 12 && NODE_VERSION_MINOR >= 5)) {
       const terminationPromises = []
 
       for (const { worker } of this.workers) {
