@@ -75,7 +75,7 @@
     "faker": "^4.1.0",
     "gitbook-cli": "^2.3.2",
     "github-release-notes": "^0.17.0",
-    "jest": "^23.6.0",
+    "jest": "^29.3.1",
     "ts-jest": "^23.10.5",
     "ts-node": "^7.0.1",
     "tslint": "^5.19.0",
